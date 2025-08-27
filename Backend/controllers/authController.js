@@ -111,7 +111,7 @@ const googleAuth = async (req, res) => {
 
     const ticket = await client.verifyIdToken({
       idToken: token,
-      audience: process.env.GOOGLE_CLIENT_ID
+      audience: [process.env.GOOGLE_CLIENT_ID, '650760834469-56i14787333t7i8lnh7ooo4t98g9a4q9.apps.googleusercontent.com']
     });
 
     const payload = ticket.getPayload();
