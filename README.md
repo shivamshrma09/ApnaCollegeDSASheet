@@ -1,4 +1,4 @@
-# DSA Sheet - Apna College
+# DSA Sheet - Apna College 373
 
 A comprehensive Data Structures and Algorithms practice platform built with React and Node.js.
 
