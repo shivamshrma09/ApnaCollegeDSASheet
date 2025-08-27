@@ -6,7 +6,8 @@ import { useTheme } from '../contexts/ThemeContext';
 import GoogleSignIn from './GoogleSignIn';
 import './Signup.css';
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5001') + '/api';
+
 
 function Signup() {
   const [fullName, setFullName] = useState('');
@@ -95,13 +96,27 @@ function Signup() {
     setError('');
     setSuccess('');
 
+    // Strict validation for real users only
     if (!fullName?.trim() || !email?.trim() || !password || !confirmPassword) {
       setError('Please fill out all fields.');
       return;
     }
     
-    if (fullName.trim().length < 2) {
-      setError('Name must be at least 2 characters long.');
+    // Block fake/demo names
+    const fakeName = /^(demo|test|fake|admin|user|sample|example)$/i;
+    if (fakeName.test(fullName.trim()) || fullName.trim().length < 3) {
+      setError('Please enter your real full name (minimum 3 characters).');
+      return;
+    }
+    
+    // Block temporary/fake email domains
+    const fakeEmailDomains = [
+      'tempmail.org', '10minutemail.com', 'guerrillamail.com', 'mailinator.com',
+      'temp-mail.org', 'throwaway.email', 'example.com', 'test.com', 'fake.com'
+    ];
+    const emailDomain = email.split('@')[1]?.toLowerCase();
+    if (fakeEmailDomains.includes(emailDomain)) {
+      setError('Please use a valid email address from a real email provider.');
       return;
     }
     
@@ -111,8 +126,18 @@ function Signup() {
       return;
     }
     
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters long.');
+    // Strong password requirements
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters long.');
+      return;
+    }
+    
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    
+    if (!hasUpperCase || !hasLowerCase || !hasNumbers) {
+      setError('Password must contain uppercase, lowercase, and numbers.');
       return;
     }
     
@@ -137,15 +162,13 @@ function Signup() {
       }, 1500);
     } catch (err) {
       console.error('Signup error:', err);
-      console.error('Error response:', err.response);
-      console.error('Request data:', { name: fullName, email, password });
       
       if (err.response?.data?.error) {
         setError(err.response.data.error);
       } else if (err.response?.status === 400) {
         setError('Invalid request data. Please check all fields and try again.');
       } else if (err.code === 'ERR_NETWORK') {
-        setError('Cannot connect to server. Please ensure the backend is running.');
+        setError('Server is currently unavailable. Please try again later.');
       } else {
         setError('Failed to create account. Please try again later.');
       }

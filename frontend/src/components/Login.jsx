@@ -6,7 +6,7 @@ import GoogleSignIn from './GoogleSignIn';
 import QuickGoogleAuth from './QuickGoogleAuth';
 import './Login.css';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api';
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5001') + '/api';
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '650760834469-56i14787333t7i8lnh7ooo4t98g9a4q9.apps.googleusercontent.com';
 
 export default function Login() {
@@ -98,6 +98,17 @@ export default function Login() {
     
     if (!email?.trim() || !password) {
       setError('Email and password are required');
+      return;
+    }
+    
+    // Block fake email domains
+    const fakeEmailDomains = [
+      'tempmail.org', '10minutemail.com', 'guerrillamail.com', 'mailinator.com',
+      'temp-mail.org', 'throwaway.email', 'example.com', 'test.com', 'fake.com'
+    ];
+    const emailDomain = email.split('@')[1]?.toLowerCase();
+    if (fakeEmailDomains.includes(emailDomain)) {
+      setError('Please use a valid email address from a real email provider.');
       return;
     }
     
