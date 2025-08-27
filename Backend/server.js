@@ -14,7 +14,8 @@ app.use(cors({
     'http://localhost:5173', 
     'http://127.0.0.1:5173',
     'https://apnacollege-dsa-sheet373-t4py.vercel.app',
-    'https://apnacollegedsaheet373-axu3.vercel.app'
+    'https://apnacollegedsaheet373-axu3.vercel.app',
+    'https://apnacollegedsasheet-373-2ya1.vercel.app'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
