@@ -20,7 +20,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/problems', require('./routes/problems'));
 app.use('/api/progress', require('./routes/progress'));
 
-const PORT =  5001;
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
