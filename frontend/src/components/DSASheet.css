@@ -1,6 +1,8 @@
 .dsa-sheet-container {
   min-height: 100vh;
   background-color: #f9fafb;
+  position: relative;
+  overflow-x: hidden;
 }
 
 .dsa-sheet-header {
@@ -9,7 +11,8 @@
   padding: 16px 0;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 100;
+  width: 100%;
 }
 
 .header-content {
@@ -78,6 +81,9 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
+  position: relative;
+  z-index: 50;
+  background-color: inherit;
 }
 
 .overview-section {
@@ -86,6 +92,8 @@
   padding: 24px;
   margin-bottom: 24px;
   border: 1px solid #e5e7eb;
+  position: relative;
+  z-index: 50;
 }
 
 .main-title {
@@ -106,6 +114,8 @@
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   overflow: hidden;
+  position: relative;
+  z-index: 50;
 }
 
 .topic-header {
