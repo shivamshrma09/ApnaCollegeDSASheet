@@ -1,12 +1,28 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const http = require('http');
+const socketIo = require('socket.io');
 const connectDB = require('./config/database');
 
 dotenv.config();
 connectDB();
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:5173',
+      'https://apnacollegedsasheet-373-2ya1.vercel.app'
+    ],
+    methods: ['GET', 'POST']
+  }
+});
+
+// Make io accessible to routes
+app.set('io', io);
 
 // CORS configuration
 app.use(cors({
@@ -47,9 +63,32 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/problems', require('./routes/problems'));
 app.use('/api/progress', require('./routes/progress'));
+app.use('/api/chat', require('./routes/chat'));
+app.use('/api/question-chat', require('./routes/questionChat'));
 
-const PORT = process.env.PORT || 5000;
+// Socket.io connection handling
+let onlineUsers = 0;
 
-app.listen(PORT, () => {
+io.on('connection', (socket) => {
+  onlineUsers++;
+  console.log(`User connected. Online users: ${onlineUsers}`);
+  
+  // Broadcast user count
+  io.emit('userCount', onlineUsers);
+  
+  socket.on('newMessage', (message) => {
+    socket.broadcast.emit('newMessage', message);
+  });
+  
+  socket.on('disconnect', () => {
+    onlineUsers--;
+    console.log(`User disconnected. Online users: ${onlineUsers}`);
+    io.emit('userCount', onlineUsers);
+  });
+});
+
+const PORT = process.env.PORT || 5001;
+
+server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

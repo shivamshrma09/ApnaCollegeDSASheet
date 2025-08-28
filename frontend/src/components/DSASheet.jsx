@@ -6,6 +6,7 @@ import PlaylistManager from './PlaylistManager';
 import ProblemModal from './ProblemModal';
 import SideCard from './SideCard';
 import SideImages from './SideImages';
+import ChatWidget from './ChatWidget';
 import './DSASheet.css';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL + '/api' ;
@@ -328,7 +329,8 @@ const DSASheet = () => {
         <div className="header-content">
           <div style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
             <div className="header-logo-link">
-              <img src="/logo.png" alt="DSA Sheet" className="logo" style={{ height: '40px'}} />
+              <img src="/logo.png" alt="DSA Sheet" className="logo"   style={{ height: '40px', transform: 'scale(1.2)' }} 
+ />
             </div>
             <div className="header-nav">
               <button 
@@ -1276,6 +1278,9 @@ const DSASheet = () => {
           onSaveNote={saveNote}
           onDeleteNote={deleteNote}
         />
+        
+        {/* Chat Widget */}
+        <ChatWidget />
       </main>
     </div>
   );
