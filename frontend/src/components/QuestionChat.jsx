@@ -60,7 +60,7 @@ const QuestionChat = ({ problem, isOpen, onClose }) => {
       setMessages(response.data.messages || []);
       setHasNewReplies(response.data.hasNewReplies || false);
     } catch (error) {
-      console.error('Error fetching messages:', error);
+      console.error('Failed to load messages. Please check your connection.');
       setMessages([]);
     }
   };
@@ -91,7 +91,8 @@ const QuestionChat = ({ problem, isOpen, onClose }) => {
         setMessages(prev => [...prev, response.data.message]);
       }
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error('Failed to send message. Please try again.');
+      alert('Failed to send message. Please check your connection and try again.');
     }
     
     setNewMessage('');
@@ -120,7 +121,8 @@ const QuestionChat = ({ problem, isOpen, onClose }) => {
         ));
       }
     } catch (error) {
-      console.error('Error sending reply:', error);
+      console.error('Failed to send reply. Please try again.');
+      alert('Failed to send reply. Please check your connection and try again.');
     }
     
     setReplyText('');
@@ -134,7 +136,7 @@ const QuestionChat = ({ problem, isOpen, onClose }) => {
       });
       fetchMessages();
     } catch (error) {
-      console.error('Error liking message:', error);
+      console.error('Failed to like message.');
     }
   };
 
@@ -171,8 +173,8 @@ const QuestionChat = ({ problem, isOpen, onClose }) => {
           {messages.length === 0 ? (
             <div className="welcome-message">
               <FaQuestion />
-              <p>No questions yet for this problem!</p>
-              <p>Ask a question and get help from AI or community members.</p>
+              <p>No messages yet for this problem!</p>
+              <p>Be the first to ask a question or share your thoughts.</p>
             </div>
           ) : (
             messages.map((msg, index) => {

@@ -56,8 +56,8 @@ router.post('/:problemId/send', async (req, res) => {
     chat.messages.push(newMessage);
     await chat.save();
 
-    // Generate AI response for questions
-    if (isQuestion) {
+    // Generate AI response ONLY if checkbox is checked
+    if (isQuestion === true || isQuestion === 'true') {
       setTimeout(async () => {
         try {
           const aiResponse = await generateGeminiResponse(message, problemTitle, problemLink);
@@ -73,13 +73,27 @@ router.post('/:problemId/send', async (req, res) => {
           chat.messages.push(aiMessage);
           await chat.save();
           
-          // Emit AI response via socket
           req.app.get('io').emit(`problemChat_${problemId}`, {
             type: 'newMessage',
             message: aiMessage
           });
         } catch (error) {
-          console.error('Gemini AI error:', error);
+          console.error('AI failed:', error);
+          const errorMessage = {
+            sender: '64f8a1b2c3d4e5f6a7b8c9d1',
+            senderName: 'System',
+            message: 'AI is currently unavailable. Please try again later.',
+            isAI: false,
+            timestamp: new Date()
+          };
+          
+          chat.messages.push(errorMessage);
+          await chat.save();
+          
+          req.app.get('io').emit(`problemChat_${problemId}`, {
+            type: 'newMessage',
+            message: errorMessage
+          });
         }
       }, 3000);
     }
