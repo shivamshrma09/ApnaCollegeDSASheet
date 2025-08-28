@@ -7,6 +7,7 @@ import ProblemModal from './ProblemModal';
 import SideCard from './SideCard';
 import SideImages from './SideImages';
 import ChatWidget from './ChatWidget';
+import QuestionChat from './QuestionChat';
 import './DSASheet.css';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL + '/api' ;
@@ -25,6 +26,8 @@ const DSASheet = () => {
   const [problemOfTheDay, setProblemOfTheDay] = useState(null);
   const [currentDay, setCurrentDay] = useState(1);
   const [dailyProblems, setDailyProblems] = useState([]);
+  const [questionChatOpen, setQuestionChatOpen] = useState(false);
+  const [selectedQuestionProblem, setSelectedQuestionProblem] = useState(null);
   const { toggleTheme, isDark } = useTheme();
   
   const getUserId = () => {
@@ -538,11 +541,12 @@ const DSASheet = () => {
                     {isOpen && (
                       <div className="problem-list">
 
-                        <div className="problem-table-header" style={{display: 'grid', gridTemplateColumns: '60px 1fr 80px 80px 60px 80px 60px 80px', gap: '12px', padding: '12px 24px', backgroundColor: '#f8f9fa', borderBottom: '1px solid #e9ecef', fontSize: '14px', fontWeight: '600', color: '#495057'}}>
+                        <div className="problem-table-header" style={{display: 'grid', gridTemplateColumns: '60px 1fr 80px 80px 80px 60px 80px 60px 80px', gap: '12px', padding: '12px 24px', backgroundColor: '#f8f9fa', borderBottom: '1px solid #e9ecef', fontSize: '14px', fontWeight: '600', color: '#495057'}}>
                           <div>Status</div>
                           <div>Problem</div>
                           <div>Practice</div>
                           <div>Solution</div>
+                          <div>Chat</div>
                           <div>Note</div>
                           <div>Revision</div>
                           <div>Playlist</div>
@@ -553,7 +557,7 @@ const DSASheet = () => {
                           <div
                             key={p.id}
                             className="problem-row"
-                            style={{display: 'grid', gridTemplateColumns: '60px 1fr 80px 80px 60px 80px 60px 80px', gap: '12px', padding: '12px 24px', borderBottom: '1px solid #f1f3f4', alignItems: 'center', fontSize: '14px'}}
+                            style={{display: 'grid', gridTemplateColumns: '60px 1fr 80px 80px 80px 60px 80px 60px 80px', gap: '12px', padding: '12px 24px', borderBottom: '1px solid #f1f3f4', alignItems: 'center', fontSize: '14px'}}
                           >
                             {/* Status */}
                             <div className="problem-status" style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'}}>
@@ -622,6 +626,19 @@ const DSASheet = () => {
                               <a href={p.video} target="_blank" rel="noopener noreferrer" style={{color: '#ef4444', textDecoration: 'none', fontSize: '12px', padding: '4px 8px', backgroundColor: '#fee2e2', borderRadius: '4px', display: 'inline-block'}}><i className="fab fa-youtube"></i> YT</a>
                             </div>
                             
+                            {/* Question Chat */}
+                            <div className="problem-action" data-label="Chat" style={{textAlign: 'center'}}>
+                              <button
+                                onClick={() => {
+                                  setSelectedQuestionProblem(p);
+                                  setQuestionChatOpen(true);
+                                }}
+                                style={{background: '#10b981', color: 'white', border: 'none', cursor: 'pointer', fontSize: '12px', padding: '4px 8px', borderRadius: '4px'}}
+                              >
+                                <i className="fas fa-comments"></i> Chat
+                              </button>
+                            </div>
+                            
                             {/* Note */}
                             <div className="problem-action" data-label="Note" style={{textAlign: 'center'}}>
                               <button
@@ -656,7 +673,7 @@ const DSASheet = () => {
                                 }}
                                 style={{fontSize: '12px', padding: '4px 8px', border: '1px solid #d1d5db', borderRadius: '4px', cursor: 'pointer', backgroundColor: 'white'}}
                               >
-                                <option value=""><i className="fas fa-list"></i> +</option>
+                                <option value="">+ Add to Playlist</option>
                                 {playlists.map(playlist => (
                                   <option key={playlist.id} value={playlist.id}>
                                     {playlist.name}
@@ -1281,6 +1298,16 @@ const DSASheet = () => {
         
         {/* Chat Widget */}
         <ChatWidget />
+        
+        {/* Question Chat Modal */}
+        <QuestionChat 
+          problem={selectedQuestionProblem}
+          isOpen={questionChatOpen}
+          onClose={() => {
+            setQuestionChatOpen(false);
+            setSelectedQuestionProblem(null);
+          }}
+        />
       </main>
     </div>
   );
