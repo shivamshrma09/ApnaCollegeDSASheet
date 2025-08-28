@@ -14,7 +14,7 @@ const QuickGoogleAuth = ({ onSuccess, onError }) => {
         email: `user${Date.now()}@gmail.com`
       };
 
-      const API_BASE_URL = (import.meta.env.VITE_API_URL || 'https://apnacollegedsasheet.onrender.com') + '/api';
+      const API_BASE_URL = 'http://localhost:5001/api';
       
       const response = await axios.post(`${API_BASE_URL}/auth/quick-google`, {
         name: googleUserData.name,

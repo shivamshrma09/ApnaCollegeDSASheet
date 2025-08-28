@@ -17,7 +17,7 @@
   width: 95%;
   max-width: 700px;
   height: 85vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #0f2585 ;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -28,9 +28,9 @@
 
 /* Chat Header */
 .question-chat-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #082db5 ;
   color: white;
-  padding: 20px;
+  padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -66,7 +66,7 @@
 }
 
 .chat-close:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: black;
 }
 
 /* Chat Messages */
@@ -83,13 +83,13 @@
 
 .welcome-message {
   text-align: center;
-  color: #6b7280;
+  color: #030916;
   padding: 60px 20px;
 }
 
 .welcome-message svg {
   font-size: 48px;
-  color: #667eea;
+  color: #060d2d;
   margin-bottom: 16px;
 }
 

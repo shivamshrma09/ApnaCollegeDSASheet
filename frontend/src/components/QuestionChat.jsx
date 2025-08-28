@@ -4,7 +4,7 @@ import axios from 'axios';
 import io from 'socket.io-client';
 import './QuestionChat.css';
 
-const API_BASE_URL = (import.meta.env.VITE_API_URL || 'https://apnacollegedsasheet.onrender.com') + '/api';
+const API_BASE_URL = 'http://localhost:5001/api';
 
 const QuestionChat = ({ problem, isOpen, onClose }) => {
   const [messages, setMessages] = useState([]);
@@ -36,7 +36,7 @@ const QuestionChat = ({ problem, isOpen, onClose }) => {
   }, [messages]);
 
   const initSocket = () => {
-    const newSocket = io(import.meta.env.VITE_API_URL || 'https://apnacollegedsasheet.onrender.com');
+    const newSocket = io('http://localhost:5001');
     
     newSocket.on(`problemChat_${problem.id}`, (data) => {
       if (data.type === 'newMessage') {

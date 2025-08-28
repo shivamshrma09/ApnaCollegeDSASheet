@@ -6,7 +6,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import GoogleSignIn from './GoogleSignIn';
 import './Signup.css';
 
-const API_BASE_URL = (import.meta.env.VITE_API_URL || 'https://apnacollegedsasheet.onrender.com') + '/api';
+const API_BASE_URL = 'http://localhost:5001/api';
 
 
 function Signup() {

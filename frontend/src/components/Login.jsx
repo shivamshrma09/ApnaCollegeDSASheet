@@ -6,7 +6,7 @@ import GoogleSignIn from './GoogleSignIn';
 import QuickGoogleAuth from './QuickGoogleAuth';
 import './Login.css';
 
-const API_BASE_URL = (import.meta.env.VITE_API_URL || 'https://apnacollegedsasheet.onrender.com') + '/api';
+const API_BASE_URL = 'http://localhost:5001/api';
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '650760834469-56i14787333t7i8lnh7ooo4t98g9a4q9.apps.googleusercontent.com';
 
 export default function Login() {

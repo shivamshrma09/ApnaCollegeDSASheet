@@ -1,7 +1,35 @@
 const express = require('express');
+const multer = require('multer');
+const path = require('path');
 const router = express.Router();
 const QuestionChat = require('../models/QuestionChat');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ 
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|gif|pdf|doc|docx|txt/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+    
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Only images and documents are allowed'));
+    }
+  }
+});
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'your-gemini-api-key');
@@ -29,7 +57,7 @@ router.get('/:problemId', async (req, res) => {
 });
 
 // Send message to problem chat
-router.post('/:problemId/send', async (req, res) => {
+router.post('/:problemId/send', upload.array('files', 5), async (req, res) => {
   try {
     const { problemId } = req.params;
     const { message, senderName, senderId, isQuestion, problemTitle, problemLink } = req.body;
@@ -168,7 +196,7 @@ router.post('/:problemId/like/:messageId', async (req, res) => {
 // Gemini AI Response Generator
 async function generateGeminiResponse(userQuestion, problemTitle, problemLink) {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     
     const prompt = `
 You are an expert DSA (Data Structures and Algorithms) tutor helping students with coding problems.
