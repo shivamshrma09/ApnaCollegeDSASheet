@@ -1,83 +1,35 @@
-const validator = require('validator');
-
-const BLOCKED_EMAILS = [
-  'test@test.com',
-  'dummy@dummy.com',
-  'fake@fake.com',
-  'example@example.com',
-  'user@user.com',
-  'admin@admin.com',
-  'test@gmail.com',
-  'test123@gmail.com'
-];
-
-const BLOCKED_NAMES = [
-  'test',
-  'dummy',
-  'fake',
-  'user',
-  'admin',
-  'example',
-  'asdf',
-  'qwerty',
-  '123',
-  'abc'
-];
-
 const validateUserInput = (name, email, password) => {
   const errors = [];
-
-  // Name validation
-  if (!name || typeof name !== 'string') {
-    errors.push('Name is required');
-  } else {
-    const trimmedName = name.trim();
-    if (trimmedName.length < 2) {
-      errors.push('Name must be at least 2 characters long');
-    }
-    if (trimmedName.length > 50) {
-      errors.push('Name must be less than 50 characters');
-    }
-    if (!/^[a-zA-Z\s]+$/.test(trimmedName)) {
-      errors.push('Name can only contain letters and spaces');
-    }
-    if (BLOCKED_NAMES.includes(trimmedName.toLowerCase())) {
-      errors.push('Please enter your real name');
-    }
+  
+  // Block fake names
+  const fakeName = /^(demo|test|fake|admin|user|sample|example)$/i;
+  if (fakeName.test(name.trim()) || name.trim().length < 3) {
+    errors.push('Please enter your real full name (minimum 3 characters).');
   }
-
-  if (!email || typeof email !== 'string') {
-    errors.push('Email is required');
-  } else {
-    const trimmedEmail = email.trim().toLowerCase();
-    if (!validator.isEmail(trimmedEmail)) {
-      errors.push('Please enter a valid email address');
-    }
-    if (BLOCKED_EMAILS.includes(trimmedEmail)) {
-      errors.push('Please use a real email address');
-    }
-    const disposableDomains = ['10minutemail.com', 'tempmail.org', 'guerrillamail.com'];
-    const emailDomain = trimmedEmail.split('@')[1];
-    if (disposableDomains.includes(emailDomain)) {
-      errors.push('Disposable email addresses are not allowed');
-    }
+  
+  // Block temporary email domains
+  const fakeEmailDomains = [
+    'tempmail.org', '10minutemail.com', 'guerrillamail.com', 'mailinator.com',
+    'temp-mail.org', 'throwaway.email', 'example.com', 'test.com', 'fake.com'
+  ];
+  const emailDomain = email.split('@')[1]?.toLowerCase();
+  if (fakeEmailDomains.includes(emailDomain)) {
+    errors.push('Please use a valid email address from a real email provider.');
   }
-
-  if (!password || typeof password !== 'string') {
-    errors.push('Password is required');
-  } else {
-    if (password.length < 6) {
-      errors.push('Password must be at least 6 characters long');
-    }
-    if (password.length > 128) {
-      errors.push('Password must be less than 128 characters');
-    }
-    const weakPasswords = ['123456', 'password', '123456789', 'qwerty', 'abc123'];
-    if (weakPasswords.includes(password.toLowerCase())) {
-      errors.push('Please choose a stronger password');
-    }
+  
+  // Strong password requirements
+  if (password.length < 8) {
+    errors.push('Password must be at least 8 characters long.');
   }
-
+  
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasLowerCase = /[a-z]/.test(password);
+  const hasNumbers = /\d/.test(password);
+  
+  if (!hasUpperCase || !hasLowerCase || !hasNumbers) {
+    errors.push('Password must contain uppercase, lowercase, and numbers.');
+  }
+  
   return {
     isValid: errors.length === 0,
     errors
@@ -86,17 +38,17 @@ const validateUserInput = (name, email, password) => {
 
 const validateLoginInput = (email, password) => {
   const errors = [];
-
-  if (!email || typeof email !== 'string') {
-    errors.push('Email is required');
-  } else if (!validator.isEmail(email.trim())) {
-    errors.push('Please enter a valid email address');
+  
+  // Block fake email domains
+  const fakeEmailDomains = [
+    'tempmail.org', '10minutemail.com', 'guerrillamail.com', 'mailinator.com',
+    'temp-mail.org', 'throwaway.email', 'example.com', 'test.com', 'fake.com'
+  ];
+  const emailDomain = email.split('@')[1]?.toLowerCase();
+  if (fakeEmailDomains.includes(emailDomain)) {
+    errors.push('Please use a valid email address from a real email provider.');
   }
-
-  if (!password || typeof password !== 'string') {
-    errors.push('Password is required');
-  }
-
+  
   return {
     isValid: errors.length === 0,
     errors
