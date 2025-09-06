@@ -1,14 +1,41 @@
-DSA Sheet - Apna College 373
+# 🚀 DSA Sheet - Apna College | AI-Powered Learning Platform
 
-A comprehensive Data Structures and Algorithms practice platform built with React and Node.js.
+[![React](https://img.shields.io/badge/React-18.0-blue.svg)](https://reactjs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-18.0-green.svg)](https://nodejs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-6.0-green.svg)](https://mongodb.com/)
+[![AI](https://img.shields.io/badge/AI-Gemini-orange.svg)](https://ai.google.dev/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Features:
+> **The world's first AI-powered DSA practice platform with 373+ real problems, smart learning algorithms, and production-ready features.**
 
-Problem Tracking: Track your DSA problem-solving progress
-User Authentication: Secure login/signup with Google OAuth
-Progress Dashboard: Visual progress tracking and statistics
-Daily Problems: Get daily problem recommendations
-Responsive Design: Works on all devices
+## 🌟 What Makes This Special?
+
+### 🤖 **AI-Powered Features**
+- **AI Mock Interviews** - Real company-style technical interviews
+- **AI Problem Discussion** - Get instant help on any coding problem
+- **AI Test Generator** - Personalized tests based on your skill level
+- **Smart Code Review** - AI analyzes your approach and suggests improvements
+
+### ⏱️ **Advanced Timer System**
+- Database-synced timer that never loses your progress
+- Problem-specific time tracking with analytics
+- Auto-stop on problem completion
+- Performance insights and improvement suggestions
+
+### 🧠 **Scientific Learning**
+- **Spaced Repetition Algorithm** - Based on forgetting curve research
+- Problems automatically scheduled for optimal retention
+- Difficulty-based review intervals
+- Progress optimization with minimal effort
+
+### 📚 **15+ Premium Sheets**
+- **Apna College** (373 problems) ✅
+- **Striver A2Z** (455 problems) ✅
+- **Love Babbar** (450 problems) ✅
+- **Blind 75** (75 problems) ✅
+- **NeetCode 150** (150 problems) ✅
+- **System Design** (70 topics) ✅
+- **CP Sheets** (500+ problems) ✅
 
 Tech Stack:
 
