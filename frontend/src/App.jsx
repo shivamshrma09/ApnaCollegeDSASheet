@@ -5,8 +5,12 @@ import { tokenManager } from "./utils/tokenManager";
 
 import { SocketProvider } from "./contexts/SimpleSocketContext";
 import ErrorBoundary from "./components/ErrorBoundary";
+import SEOHead from "./components/SEOHead";
+import Analytics from "./components/Analytics";
+import PerformanceOptimizer from "./components/PerformanceOptimizer";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import GitHubCallback from "./components/GitHubCallback";
 import DSASheet from "./components/DSASheet";
 import CompanyWiseDSASheet from "./components/CompanyWiseDSASheet";
 import CompanyWishSheet from "./components/CompanyWishSheet";
@@ -40,6 +44,27 @@ function DSASheetWrapper() {
   const { sheetType } = useParams();
   const [currentSheet, setCurrentSheet] = useState(sheetType || 'apnaCollege');
   const [key, setKey] = useState(0);
+  
+  const getSheetSEO = (sheet) => {
+    const seoData = {
+      apnaCollege: {
+        title: "Apna College DSA Sheet | 373 Curated Problems for Interview Prep",
+        description: "Master coding interviews with Apna College's curated DSA sheet. 373 handpicked problems covering all important topics for placement preparation.",
+        keywords: "Apna College DSA, coding interview, placement preparation, DSA problems"
+      },
+      striverSDE: {
+        title: "Striver SDE Sheet | Top Interview Questions for Software Engineers",
+        description: "Complete Striver's SDE sheet with most asked interview questions. Perfect for software engineering roles at top companies.",
+        keywords: "Striver SDE sheet, software engineer interview, coding questions"
+      },
+      blind75: {
+        title: "Blind 75 LeetCode Problems | Essential Coding Interview Questions",
+        description: "Master the famous Blind 75 LeetCode problems. Essential questions asked in FAANG and top tech company interviews.",
+        keywords: "Blind 75, LeetCode, FAANG interview, coding problems"
+      }
+    };
+    return seoData[sheet] || seoData.apnaCollege;
+  };
 
   const handleSheetChange = (newSheetType) => {
     console.log('Switching to sheet:', newSheetType);
@@ -65,11 +90,44 @@ function DSASheetWrapper() {
     }
   }, [sheetType, currentSheet]);
 
-  return <DSASheet key={key} sheetType={currentSheet} onSheetChange={handleSheetChange} />;
+  const seoData = getSheetSEO(currentSheet);
+  
+  return (
+    <>
+      <SEOHead 
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+        canonical={`https://your-domain.com/sheet/${currentSheet}`}
+      />
+      <DSASheet key={key} sheetType={currentSheet} onSheetChange={handleSheetChange} />
+    </>
+  );
 }
 
 function TopicSheetWrapper() {
   const { topicType } = useParams();
+  
+  const getTopicSEO = (topic) => {
+    const seoData = {
+      arrays: {
+        title: "Array Problems | DSA Practice - Data Structures & Algorithms",
+        description: "Master array problems with our curated collection. Practice essential array algorithms for coding interviews.",
+        keywords: "array problems, array algorithms, DSA arrays, coding interview arrays"
+      },
+      strings: {
+        title: "String Problems | DSA Practice - Data Structures & Algorithms", 
+        description: "Practice string manipulation problems. Essential string algorithms for technical interviews.",
+        keywords: "string problems, string algorithms, DSA strings, coding interview strings"
+      },
+      trees: {
+        title: "Tree Problems | DSA Practice - Binary Trees & BST",
+        description: "Master tree data structures with our comprehensive problem set. Binary trees, BST, and advanced tree algorithms.",
+        keywords: "tree problems, binary tree, BST, tree algorithms, DSA trees"
+      }
+    };
+    return seoData[topic] || seoData.arrays;
+  };
   
   const getTopicData = (topic) => {
     switch (topic) {
@@ -95,7 +153,19 @@ function TopicSheetWrapper() {
     window.history.back();
   };
 
-  return <TopicSheet topicData={topicData} onBack={handleBack} />;
+  const seoData = getTopicSEO(topicType);
+  
+  return (
+    <>
+      <SEOHead 
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+        canonical={`https://your-domain.com/topic/${topicType}`}
+      />
+      <TopicSheet topicData={topicData} onBack={handleBack} />
+    </>
+  );
 }
 
 function AppContent() {
@@ -115,27 +185,73 @@ function AppContent() {
     };
     
     checkToken();
-    // Check token every 30 minutes (less aggressive)
-    const interval = setInterval(checkToken, 30 * 60 * 1000);
+    // Check token every 5 minutes (less aggressive)
+    const interval = setInterval(checkToken, 5 * 60 * 1000);
     
     return () => clearInterval(interval);
   }, []);
   
   return (
     <div style={{ position: 'relative' }}>
-      <BrowserRouter>
+      <Analytics />
+      <PerformanceOptimizer />
+      <BrowserRouter future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true
+      }}>
         <Routes>
-          <Route path="/" element={<DSASheetWrapper />} />
+          <Route path="/" element={
+            <>
+              <SEOHead 
+                title="DSA Sheet - Apna College | Complete Data Structures & Algorithms Practice Platform"
+                description="Master Data Structures & Algorithms with our comprehensive DSA practice platform. 373+ curated problems, progress tracking, mentorship, and interview preparation."
+                keywords="DSA, Data Structures, Algorithms, Coding Interview, LeetCode, Programming, Apna College"
+                canonical="https://your-domain.com/"
+              />
+              <DSASheetWrapper />
+            </>
+          } />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/auth/github/callback" element={<GitHubCallback />} />
           <Route path="/dsa-sheet" element={<DSASheetWrapper />} />
           <Route path="/sheet/:sheetType" element={<DSASheetWrapper />} />
           <Route path="/cp-sheet" element={<DSASheetWrapper />} />
-          <Route path="/competitive" element={<CompetitiveDashboard />} />
+          <Route path="/competitive" element={
+            <>
+              <SEOHead 
+                title="Competitive Programming Dashboard | CP Practice & Contests"
+                description="Track your competitive programming progress. Practice CP problems, participate in contests, and improve your algorithmic skills."
+                keywords="competitive programming, CP practice, coding contests, algorithmic programming"
+                canonical="https://your-domain.com/competitive"
+              />
+              <CompetitiveDashboard />
+            </>
+          } />
           <Route path="/company/:companyId" element={<CompanyWiseDSASheet onSheetChange={(type) => window.location.href = `/sheet/${type}`} />} />
           <Route path="/company-wish-sheet" element={<CompanyWishSheet />} />
-          <Route path="/mentorship" element={<Mentorship />} />
-          <Route path="/interview" element={<InterviewPage />} />
+          <Route path="/mentorship" element={
+            <>
+              <SEOHead 
+                title="DSA Mentorship Program | Get Guidance from Industry Experts"
+                description="Join our mentorship program and get personalized guidance from industry experts. Accelerate your DSA learning and interview preparation."
+                keywords="DSA mentorship, coding mentor, interview preparation, programming guidance"
+                canonical="https://your-domain.com/mentorship"
+              />
+              <Mentorship />
+            </>
+          } />
+          <Route path="/interview" element={
+            <>
+              <SEOHead 
+                title="Mock Interview Practice | AI-Powered Coding Interview Simulator"
+                description="Practice coding interviews with our AI-powered mock interview system. Get real-time feedback and improve your interview skills."
+                keywords="mock interview, coding interview practice, AI interview, technical interview preparation"
+                canonical="https://your-domain.com/interview"
+              />
+              <InterviewPage />
+            </>
+          } />
           <Route path="/code-editor" element={<CodeEditorPage />} />
           <Route path="/roadmap" element={<RoadmapPage />} />
           <Route path="/roadmap/:roadmapType" element={<RoadmapPage />} />

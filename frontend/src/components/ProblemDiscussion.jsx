@@ -15,7 +15,7 @@ const getAuthHeaders = async () => {
   };
 };
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}/api`;
 
 const ProblemDiscussion = ({ isOpen, onClose, problem, userId }) => {
   const { isDark } = useTheme();
@@ -43,7 +43,7 @@ const ProblemDiscussion = ({ isOpen, onClose, problem, userId }) => {
       
       // Initialize socket connection with authentication
       const token = localStorage.getItem('token');
-      const newSocket = io('http://localhost:5001', {
+      const newSocket = io(import.meta.env.VITE_SOCKET_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}`, {
         auth: { token }
       });
       setSocket(newSocket);

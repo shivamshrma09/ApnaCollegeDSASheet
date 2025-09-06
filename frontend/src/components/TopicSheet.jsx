@@ -762,8 +762,8 @@ const TopicSheet = ({ topicData, onBack }) => {
           </h1>
           <p style={{fontSize: '16px', color: '#6b7280', marginBottom: '8px'}}>{topicData.description}</p>
           
-          <div style={{backgroundColor: '#fff3cd', border: '1px solid #ffeaa7', borderRadius: '8px', padding: '16px', margin: '20px 0', fontSize: '14px', color: '#856404'}}>
-            <strong>Note:</strong> Practice these curated problems to master {topicData.title.split(' - ')[0]} concepts with comprehensive coverage of all important patterns.
+          <div style={{backgroundColor: '#fef3c7', border: '1px solid #f59e0b', borderRadius: '8px', padding: '16px', margin: '20px 0', fontSize: '14px', color: '#92400e'}}>
+            <strong>Complete Learning Platform:</strong> Each problem includes practice links, detailed articles, video solutions, and company tags. Start solving problems to track your progress and master data structures and algorithms step by step.
           </div>
           
           <div style={{marginBottom: '24px'}}>

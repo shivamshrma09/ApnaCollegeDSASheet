@@ -107,6 +107,105 @@ router.post('/login', [
 
 router.post('/google', googleAuth);
 router.post('/quick-google', quickGoogleAuth);
+router.post('/github', async (req, res) => {
+  try {
+    const { code } = req.body;
+    
+    if (!code) {
+      return res.status(400).json({ error: 'GitHub authorization code is required' });
+    }
+    
+    // Exchange code for access token
+    const tokenResponse = await fetch('https://github.com/login/oauth/access_token', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        client_id: process.env.GITHUB_CLIENT_ID || 'Ov23liJ2EJqT6I1U83AK',
+        client_secret: process.env.GITHUB_CLIENT_SECRET || 'your-github-client-secret',
+        code
+      })
+    });
+    
+    const tokenData = await tokenResponse.json();
+    
+    if (tokenData.error) {
+      return res.status(400).json({ error: 'GitHub token exchange failed' });
+    }
+    
+    // Get user data from GitHub
+    const userResponse = await fetch('https://api.github.com/user', {
+      headers: {
+        'Authorization': `token ${tokenData.access_token}`,
+        'User-Agent': 'PlusDSA-App'
+      }
+    });
+    
+    const userData = await userResponse.json();
+    
+    if (!userData.id) {
+      return res.status(400).json({ error: 'Failed to get GitHub user data' });
+    }
+    
+    // Get user email if not public
+    let email = userData.email;
+    if (!email) {
+      const emailResponse = await fetch('https://api.github.com/user/emails', {
+        headers: {
+          'Authorization': `token ${tokenData.access_token}`,
+          'User-Agent': 'PlusDSA-App'
+        }
+      });
+      const emails = await emailResponse.json();
+      const primaryEmail = emails.find(e => e.primary);
+      email = primaryEmail ? primaryEmail.email : null;
+    }
+    
+    if (!email) {
+      return res.status(400).json({ error: 'GitHub account must have a public email' });
+    }
+    
+    // Check if user exists
+    let user = await User.findOne({ email: email.toLowerCase() });
+    
+    if (!user) {
+      // Create new user
+      user = new User({
+        name: userData.name || userData.login,
+        email: email.toLowerCase(),
+        password: Math.random().toString(36).slice(-8) + 'Aa1!',
+        githubId: userData.id.toString(),
+        avatar: userData.avatar_url || ''
+      });
+      await user.save();
+      console.log('✅ New GitHub user created:', email);
+    } else {
+      // Update existing user
+      if (userData.avatar_url && userData.avatar_url !== user.avatar) {
+        user.avatar = userData.avatar_url;
+        await user.save();
+      }
+      console.log('✅ Existing GitHub user logged in:', email);
+    }
+    
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    
+    res.json({
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        avatar: user.avatar
+      }
+    });
+  } catch (error) {
+    console.error('GitHub auth error:', error.message);
+    res.status(500).json({ error: 'GitHub authentication failed' });
+  }
+});
 
 router.get('/me', auth, getUserProfile);
 

@@ -10,7 +10,13 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: ["http://localhost:5173", "http://localhost:3000", "http://localhost:5000"],
+    origin: [
+      process.env.FRONTEND_URL || "http://localhost:5173", 
+      "http://localhost:3000", 
+      "http://localhost:5000",
+      "https://plusdsa.vercel.app",
+      "https://accounts.google.com"
+    ],
     methods: ["GET", "POST"],
     credentials: true
   },
@@ -29,16 +35,24 @@ let globalWindowStart = Date.now();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:5000', 'http://127.0.0.1:5173'],
+  origin: [
+    process.env.FRONTEND_URL || 'http://localhost:5173', 
+    'http://localhost:3000', 
+    'http://localhost:5000', 
+    'http://127.0.0.1:5173',
+    'https://plusdsa.vercel.app',
+    'https://accounts.google.com',
+    'https://www.googleapis.com'
+  ],
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization', 'userid', 'X-CSRF-Token'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'userid', 'X-CSRF-Token', 'X-Requested-With'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   optionsSuccessStatus: 200
 }));
 app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://localhost:27017/dsa-sheet', {
+mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
@@ -70,6 +84,7 @@ const dailyEmailRoutes = require('./routes/dailyEmail');
 const dailyMorningEmailRoutes = require('./routes/dailyMorningEmail');
 const weeklyReportEmailRoutes = require('./routes/weeklyReportEmail');
 const dailyReminderEmailRoutes = require('./routes/dailyReminderEmail');
+const discussionRoutes = require('./routes/discussion');
 
 
 // Basic Routes
@@ -192,149 +207,27 @@ try {
   console.log('✅ Daily reminder email routes registered');
 } catch (e) { console.error('❌ Daily reminder email routes failed:', e.message); }
 
+try {
+  app.use('/api/discussion', discussionRoutes);
+  console.log('✅ Discussion routes registered');
+} catch (e) { console.error('❌ Discussion routes failed:', e.message); }
 
 
-// Discussion Routes
-app.post('/api/discussion/send', async (req, res) => {
-  try {
-    const { problemId, content, userId, userName } = req.body;
-    
-    const message = {
-      _id: new Date().getTime().toString(),
-      problemId,
-      content,
-      userId,
-      userName,
-      createdAt: new Date(),
-      upvotes: 0,
-      type: 'user'
-    };
 
-    // Emit to all clients in the problem room
-    io.to(`problem_${problemId}`).emit('newDiscussionMessage', message);
-    
-    res.json(message);
-  } catch (error) {
-    console.error('Error sending message:', error);
-    res.status(500).json({ error: 'Failed to send message' });
-  }
-});
+// OLD Discussion Routes - REMOVED (using database routes now)
 
-app.post('/api/discussion/ai-reply', async (req, res) => {
-  const { problemId, question, problemTitle } = req.body;
-  
-  // Global rate limiting check
-  const now = Date.now();
-  
-  // Reset global counter every minute
-  if (now - globalWindowStart > AI_WINDOW) {
-    globalRequestCount = 0;
-    globalWindowStart = now;
-  }
-  
-  // Check global limit (max 10 requests per minute across all users)
-  if (globalRequestCount >= 10) {
-    const fallbackMessage = {
-      _id: new Date().getTime().toString() + '_ai',
-      problemId,
-      content: "AI service is temporarily busy. Please try again in a minute.",
-      userId: 'ai_assistant',
-      userName: 'AI Assistant',
-      createdAt: new Date(),
-      upvotes: 0,
-      type: 'ai'
-    };
-    io.to(`problem_${problemId}`).emit('newDiscussionMessage', fallbackMessage);
-    return res.json(fallbackMessage);
-  }
-  
-  // Per-user rate limiting
-  const clientId = req.ip || 'unknown';
-  const clientRequests = aiRequestTracker.get(clientId) || [];
-  const recentRequests = clientRequests.filter(time => now - time < AI_WINDOW);
-  
-  if (recentRequests.length >= AI_RATE_LIMIT) {
-    const fallbackMessage = {
-      _id: new Date().getTime().toString() + '_ai',
-      problemId,
-      content: "Please wait before asking another question.",
-      userId: 'ai_assistant',
-      userName: 'AI Assistant',
-      createdAt: new Date(),
-      upvotes: 0,
-      type: 'ai'
-    };
-    io.to(`problem_${problemId}`).emit('newDiscussionMessage', fallbackMessage);
-    return res.json(fallbackMessage);
-  }
-  
-  // Update counters
-  globalRequestCount++;
-  recentRequests.push(now);
-  aiRequestTracker.set(clientId, recentRequests);
-  
-  try {
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-    
-    const prompt = `You are an AI assistant helping with DSA problems. 
-    Problem: ${problemTitle}
-    User Question: ${question}
-    
-    Provide a helpful, concise response about the algorithm, approach, or solution. 
-    Keep it under 200 words and focus on practical advice.`;
-    
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const aiReply = response.text();
-    
-    const aiMessage = {
-      _id: new Date().getTime().toString() + '_ai',
-      problemId,
-      content: aiReply,
-      userId: 'ai_assistant',
-      userName: 'AI Assistant',
-      createdAt: new Date(),
-      upvotes: 0,
-      type: 'ai'
-    };
 
-    // Emit AI response to all clients
-    io.to(`problem_${problemId}`).emit('newDiscussionMessage', aiMessage);
-    
-    res.json(aiMessage);
-  } catch (error) {
-    console.error('Error generating AI response:', error);
-    
-    // Fallback response
-    const fallbackMessage = {
-      _id: new Date().getTime().toString() + '_ai',
-      problemId,
-      content: "Think about the time complexity. Can you optimize your solution further?",
-      userId: 'ai_assistant',
-      userName: 'AI Assistant',
-      createdAt: new Date(),
-      upvotes: 0,
-      type: 'ai'
-    };
-    
-    io.to(`problem_${problemId}`).emit('newDiscussionMessage', fallbackMessage);
-    res.json(fallbackMessage);
-  }
-});
 
-app.get('/api/discussion/:problemId', (req, res) => {
-  // Return empty array for now - you can implement database storage later
-  res.json([]);
-});
 
-app.post('/api/discussion/upvote/:messageId', (req, res) => {
-  // Simple upvote response
-  res.json({ upvotes: 1, hasUpvoted: true });
-});
 
 // Socket.IO Connection
 io.on('connection', (socket) => {
   console.log('✅ User connected:', socket.id);
+  
+  socket.on('authenticate', (data) => {
+    socket.userId = data.userId;
+    console.log(`User ${socket.id} authenticated as ${data.userId}`);
+  });
   
   socket.on('joinProblem', (problemId) => {
     socket.join(`problem_${problemId}`);
@@ -352,6 +245,17 @@ io.on('connection', (socket) => {
 
 // Make io available globally for other modules
 app.set('io', io);
+
+// Add Socket.io middleware for authentication
+io.use((socket, next) => {
+  const token = socket.handshake.auth.token;
+  if (token) {
+    // You can add JWT verification here if needed
+    next();
+  } else {
+    next();
+  }
+});
 
 // Global error handling middleware
 app.use((err, req, res, next) => {

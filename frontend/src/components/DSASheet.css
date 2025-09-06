@@ -200,6 +200,48 @@
   border: 1px solid #e5e7eb;
 }
 
+@media (max-width: 480px) {
+  /* Extra small phones */
+  .dsa-sheet-container {
+    padding: 0;
+  }
+  
+  .dsa-sheet-header {
+    padding: 8px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  
+  .header-content {
+    padding: 0 8px;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .logo {
+    height: 32px;
+  }
+  
+  .nav-button {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  
+  .dsa-sheet-main {
+    padding: 8px;
+  }
+  
+  .overview-section {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .main-title {
+    font-size: 18px;
+  }
+}
+
 @media (max-width: 768px) {
   .dsa-sheet-header {
     padding: 12px 0;

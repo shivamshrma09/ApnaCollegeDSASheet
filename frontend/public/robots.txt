@@ -1,0 +1,41 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://plusdsa.vercel.app/sitemap.xml
+
+# Additional files
+Allow: /humans.txt
+Allow: /security.txt
+
+# Crawl-delay for better server performance
+Crawl-delay: 1
+
+# Request rate
+Request-rate: 1/1s
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /*?*
+
+# Allow important pages
+Allow: /problems/
+Allow: /practice/
+Allow: /dashboard/
+Allow: /login
+Allow: /signup
+Allow: /about
+Allow: /contact
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /

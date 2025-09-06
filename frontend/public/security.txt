@@ -1,0 +1,8 @@
+Contact: mailto:shivamsharma27107@gmail.com
+Contact: https://www.linkedin.com/in/shivam-kumar-321810324/
+Expires: 2025-12-31T23:59:59.000Z
+Encryption: https://plusdsa.vercel.app/pgp-key.txt
+Acknowledgments: https://plusdsa.vercel.app/security-acknowledgments
+Preferred-Languages: en, hi
+Canonical: https://plusdsa.vercel.app/.well-known/security.txt
+Policy: https://plusdsa.vercel.app/security-policy

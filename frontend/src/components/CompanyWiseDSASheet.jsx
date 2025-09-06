@@ -243,8 +243,8 @@ const CompanyWiseDSASheet = ({ onSheetChange }) => {
           </p>
           <a href="#" style={{color: '#3b82f6', fontSize: '14px', textDecoration: 'none'}}>Know More</a>
           
-          <div style={{backgroundColor: '#fff3cd', border: '1px solid #ffeaa7', borderRadius: '8px', padding: '16px', margin: '20px 0', fontSize: '14px', color: '#856404'}}>
-            <strong>Note:</strong> You can find practice links for problems available on the internet. However few problems are not there on LeetCode for which you will not find a practice link attached. We cannot use third-party links due to legal constraints.
+          <div style={{backgroundColor: '#fef3c7', border: '1px solid #f59e0b', borderRadius: '8px', padding: '16px', margin: '20px 0', fontSize: '14px', color: '#92400e'}}>
+            <strong>Complete Learning Platform:</strong> Each problem includes practice links, detailed articles, video solutions, and company tags. Start solving problems to track your progress and master data structures and algorithms step by step.
           </div>
           
           <div style={{marginBottom: '24px'}}>

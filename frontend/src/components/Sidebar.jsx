@@ -731,43 +731,7 @@ const navigate = useNavigate();
         </div>
 
         {/* Spaced Repetition Section */}
-        <div style={{ padding: '8px 0' }}>
-          <button
-            onClick={() => {
-              navigate('/spaced-repetition');
-              onClose();
-            }}
-            style={{
-              width: '100%',
-              padding: '16px 20px',
-              background: 'none',
-              border: 'none',
-              textAlign: 'left',
-              cursor: 'pointer',
-              color: isDark ? 'white' : '#374151',
-              fontSize: '15px',
-              fontWeight: '500',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              transition: 'all 0.2s'
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.background = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)';
-              e.target.style.color = isDark ? '#1E90FF' : '#1E90FF';
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = 'none';
-              e.target.style.color = isDark ? 'white' : '#374151';
-            }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill={isDark ? 'white' : '#1E90FF'}>
-              <path d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/>
-            </svg>
-            {!collapsed && 'Spaced Repetition'}
-          </button>
-        </div>
-
+    
 
 
         {/* Mentorship Section */}

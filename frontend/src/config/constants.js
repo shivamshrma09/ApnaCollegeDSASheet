@@ -1,9 +1,12 @@
 // Configuration constants
-export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
-export const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5001';
+export const API_BASE_URL = import.meta.env.VITE_API_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}/api`;
+export const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}`;
 
-// Remove hardcoded API key - use environment variable
+// Gemini API Keys from environment variables
 export const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+export const GEMINI_API_TEST = import.meta.env.VITE_GEMINI_API_TEST;
+export const GEMINI_API_DISCUSSION = import.meta.env.VITE_GEMINI_API_DISCUSSION;
+export const GEMINI_API_INTERVIEW = import.meta.env.VITE_GEMINI_API_INTERVIEW;
 
 export const ROOMS = [
   { id: 'general', name: 'General Discussion' },

@@ -977,6 +977,109 @@ const DSASheet = ({ sheetType = 'apnaCollege', onSheetChange }) => {
                       </svg>
                       VISION Sheet (100 Problems)
                     </button>
+                    
+                    <div style={{ height: '1px', backgroundColor: isDark ? '#4b5563' : '#e5e7eb', margin: '8px 0' }}></div>
+                    <div style={{ padding: '8px 16px', fontSize: '12px', fontWeight: '700', color: isDark ? '#9ca3af' : '#6b7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>All Sheets</div>
+                    <button onClick={() => onSheetChange('systemDesign')} style={{
+                      color: isDark ? '#e5e7eb' : '#374151',
+                      padding: '10px 16px',
+                      textDecoration: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      width: '100%',
+                      textAlign: 'left',
+                      border: 'none',
+                      background: 'none',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      borderRadius: '8px',
+                      gap: '10px',
+                      transition: 'all 0.2s ease',
+                      fontWeight: '500'
+                    }}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? '#374151' : '#f1f5f9'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6Z"/>
+                      </svg>
+                      System Design (70 Topics)
+                    </button>
+                    <button onClick={() => onSheetChange('striverCP')} style={{
+                      color: isDark ? '#e5e7eb' : '#374151',
+                      padding: '10px 16px',
+                      textDecoration: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      width: '100%',
+                      textAlign: 'left',
+                      border: 'none',
+                      background: 'none',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      borderRadius: '8px',
+                      gap: '10px',
+                      transition: 'all 0.2s ease',
+                      fontWeight: '500'
+                    }}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? '#374151' : '#f1f5f9'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6Z"/>
+                      </svg>
+                      Striver CP (298 Problems)
+                    </button>
+                    <button onClick={() => onSheetChange('cp31')} style={{
+                      color: isDark ? '#e5e7eb' : '#374151',
+                      padding: '10px 16px',
+                      textDecoration: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      width: '100%',
+                      textAlign: 'left',
+                      border: 'none',
+                      background: 'none',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      borderRadius: '8px',
+                      gap: '10px',
+                      transition: 'all 0.2s ease',
+                      fontWeight: '500'
+                    }}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? '#374151' : '#f1f5f9'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19,3H5C3.9,3 3,3.9 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.9 20.1,3 19,3M9,17H7V10H9V17M13,17H11V7H13V17M17,17H15V13H17V17Z"/>
+                      </svg>
+                      CP-31 (372 Problems)
+                    </button>
+                    <button onClick={() => onSheetChange('visionCP')} style={{
+                      color: isDark ? '#e5e7eb' : '#374151',
+                      padding: '10px 16px',
+                      textDecoration: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      width: '100%',
+                      textAlign: 'left',
+                      border: 'none',
+                      background: 'none',
+                      cursor: 'pointer',
+                      fontSize: '14px',
+                      borderRadius: '8px',
+                      gap: '10px',
+                      transition: 'all 0.2s ease',
+                      fontWeight: '500'
+                    }}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = isDark ? '#374151' : '#f1f5f9'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"/>
+                      </svg>
+                      VISION CP (135 Problems)
+                    </button>
                   </div>
                 </div>
 
@@ -1431,8 +1534,8 @@ const DSASheet = ({ sheetType = 'apnaCollege', onSheetChange }) => {
                   <strong>Disclaimer:</strong> The questions are hard, so we expect you to be well-versed with DSA. If you aren't, please try A2Z-Sheet or SDE-Sheet first.
                 </div>
               ) : (
-                <div style={{backgroundColor: '#fff3cd', border: '1px solid #ffeaa7', borderRadius: '8px', padding: '16px', margin: '20px 0', fontSize: '14px', color: '#856404'}}>
-                  <strong>Note:</strong> You can find LeetCode links for problems available on the internet. However few problems are not there on LeetCode for which you will not find a practice link attached. We cannot use third-party links due to legal constraints.
+                <div style={{backgroundColor: '#fef3c7', border: '1px solid #f59e0b', borderRadius: '8px', padding: '16px', margin: '20px 0', fontSize: '14px', color: '#92400e'}}>
+                  <strong>Complete Learning Platform:</strong> Each problem includes practice links, detailed articles, video solutions, and company tags. Start solving problems to track your progress and master data structures and algorithms step by step.
                 </div>
               )}
               
@@ -1467,12 +1570,8 @@ const DSASheet = ({ sheetType = 'apnaCollege', onSheetChange }) => {
                     </div>
                   </div>
                 </div>
-              </div>
-              
-
-            </section>
-              
-            <div style={{display: 'flex', gap: '12px', marginBottom: '24px', flexWrap: 'wrap', alignItems: 'center'}}>
+                
+                <div style={{display: 'flex', gap: '12px', marginTop: '24px', flexWrap: 'wrap', alignItems: 'center'}}>
                 <input
                   type="text"
                   placeholder="Search problems..."
@@ -1533,8 +1632,11 @@ const DSASheet = ({ sheetType = 'apnaCollege', onSheetChange }) => {
                   <img src="/random.svg" alt="Random" style={{width: '16px', height: '16px', filter: 'brightness(0) invert(1)'}} />
                   Pick Random
                 </button>
+                </div>
+              </div>
+              
 
-            </div>
+            </section>
 
 
 

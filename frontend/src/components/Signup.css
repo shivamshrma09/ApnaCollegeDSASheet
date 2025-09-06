@@ -23,10 +23,10 @@
 }
 
 .signup-logo {
-  height: 48px;
+  height: 40px;
+  width: auto;
   margin-bottom: 12px;
   border-radius: 6px;
-   transform: scale(3);
 }
 
 .signup-title {
@@ -191,7 +191,92 @@
 .social-buttons {
   margin-top: 20px;
   display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.social-buttons > button {
+  flex: 1;
+}
+
+@media (max-width: 640px) {
+  .social-buttons {
+    flex-direction: column;
+  }
+  
+  .social-buttons > button {
+    flex: none;
+    width: 100%;
+  }
+}
+
+.google-signin-button {
+  display: flex;
+  align-items: center;
   justify-content: center;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  color: #475569;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+  width: 100%;
+}
+
+.google-signin-button:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.google-signin-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.github-signin-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 16px;
+  border: 1px solid #24292e;
+  border-radius: 6px;
+  color: #ffffff;
+  background-color: #24292e;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+  width: 100%;
+}
+
+.github-signin-button:hover {
+  background-color: #1a1e22;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.github-signin-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.google-icon {
+  margin-right: 8px;
+  color: #dc2626;
+  font-size: 16px;
+}
+
+.github-icon {
+  margin-right: 8px;
+  color: #ffffff;
+  font-size: 16px;
 }
 
 .social-button {
@@ -295,6 +380,17 @@ body.dark .social-button:hover {
   background-color: #333333;
 }
 
+body.dark .google-signin-button {
+  background-color: #222222;
+  border-color: #444444;
+  color: #ffffff;
+}
+
+body.dark .google-signin-button:hover {
+  background-color: #333333;
+  border-color: #555555;
+}
+
 body.dark .divider-border {
   border-color: #444444;
 }
@@ -310,4 +406,55 @@ body.dark .signup-link-container {
 
 body.dark .dark-mode-toggle:hover {
   background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+  .signup-container {
+    padding: 4px;
+    min-height: 100vh;
+    align-items: stretch;
+  }
+  
+  .signup-card {
+    max-width: 100%;
+    margin: 0;
+    border-radius: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .signup-header {
+    padding: 16px;
+  }
+  
+  .signup-form-container {
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .form-input {
+    padding: 12px;
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  .submit-button {
+    padding: 14px 16px;
+    font-size: 15px;
+  }
+  
+  .social-buttons {
+    gap: 8px;
+  }
+  
+  .google-signin-button,
+  .github-signin-button {
+    padding: 14px 16px;
+    font-size: 15px;
+  }
 }

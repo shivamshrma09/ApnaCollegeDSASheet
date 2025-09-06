@@ -5,7 +5,7 @@ const GoogleSignIn = ({ onSuccess, onError }) => {
 
   useEffect(() => {
     // Check if Google OAuth is enabled
-    const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || process.env.GOOGLE_CLIENT_ID;
+    const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
     
     if (!googleClientId) {
       // Show fallback message if Google OAuth is disabled

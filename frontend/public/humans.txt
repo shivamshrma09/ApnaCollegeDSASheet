@@ -1,0 +1,28 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+    Founder & Developer: Shivam Kumar
+    Contact: shivamsharma27107@gmail.com
+    LinkedIn: https://www.linkedin.com/in/shivam-kumar-321810324/
+    Location: India
+
+# THANKS
+    All the students and developers who use PlusDSA
+    Open source community
+    React & Node.js communities
+
+# TECHNOLOGY COLOPHON
+    Frontend: React 18, Vite, Tailwind CSS
+    Backend: Node.js, Express.js, MongoDB
+    Authentication: JWT, Google OAuth 2.0
+    Hosting: Vercel
+    Analytics: Google Analytics
+    Version Control: Git, GitHub
+
+# SITE
+    Last update: 2024/12/19
+    Language: English / Hindi
+    Doctype: HTML5
+    IDE: VS Code
+    Standards: HTML5, CSS3, ES6+

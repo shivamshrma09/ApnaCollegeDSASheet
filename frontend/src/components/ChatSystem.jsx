@@ -15,7 +15,7 @@ const ChatSystem = ({ isDark, onClose }) => {
 
   useEffect(() => {
     // Initialize socket
-    const serverUrl = process.env.REACT_APP_SERVER_URL || 'http://localhost:5001';
+    const serverUrl = import.meta.env.VITE_SOCKET_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}`;
     socketRef.current = io(serverUrl);
     
     fetchChatRooms();
@@ -47,7 +47,7 @@ const ChatSystem = ({ isDark, onClose }) => {
 
   const fetchChatRooms = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/chat-system/rooms', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}/api`}/chat-system/rooms`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -61,7 +61,7 @@ const ChatSystem = ({ isDark, onClose }) => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/chat-system/users', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}/api`}/chat-system/users`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -75,7 +75,7 @@ const ChatSystem = ({ isDark, onClose }) => {
 
   const fetchUnreadCount = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/chat-system/unread', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}/api`}/chat-system/unread`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -89,7 +89,7 @@ const ChatSystem = ({ isDark, onClose }) => {
 
   const fetchMessages = async (chatId) => {
     try {
-      const response = await fetch(`http://localhost:5001/api/chat-system/rooms/${chatId}/messages`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}/api`}/chat-system/rooms/${chatId}/messages`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -108,7 +108,7 @@ const ChatSystem = ({ isDark, onClose }) => {
     if (!newMessage.trim() || !selectedChat) return;
 
     try {
-      const response = await fetch('http://localhost:5001/api/chat-system/messages', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}/api`}/chat-system/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ const ChatSystem = ({ isDark, onClose }) => {
 
   const createDM = async (userId) => {
     try {
-      const response = await fetch('http://localhost:5001/api/chat-system/dm', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}/api`}/chat-system/dm`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -153,7 +153,7 @@ const ChatSystem = ({ isDark, onClose }) => {
 
   const upvoteMessage = async (messageId) => {
     try {
-      await fetch(`http://localhost:5001/api/chat-system/messages/${messageId}/upvote`, {
+      await fetch(`${import.meta.env.VITE_API_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}/api`}/chat-system/messages/${messageId}/upvote`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`

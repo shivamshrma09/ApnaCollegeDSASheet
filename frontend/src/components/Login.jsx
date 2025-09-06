@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaSpinner, FaGoogle, FaLinkedin } from 'react-icons/fa';
+import { FaSpinner, FaGoogle, FaGithub } from 'react-icons/fa';
 import api from '../utils/api';
 import GoogleSignIn from './GoogleSignIn';
 import { useTheme } from '../contexts/ThemeContext';
 import './Login.css';
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || null;
+const GOOGLE_CLIENT_ID = '650760834469-56i14787333t7i8lnh7ooo4t98g9a4q9.apps.googleusercontent.com';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -17,9 +17,6 @@ export default function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Skip Google OAuth if disabled
-    if (!GOOGLE_CLIENT_ID) return;
-    
     const loadGoogleScript = () => {
       if (window.google) {
         initializeGoogle();
@@ -31,17 +28,27 @@ export default function Login() {
       script.async = true;
       script.defer = true;
       script.onload = initializeGoogle;
+      script.onerror = () => {
+        console.error('Failed to load Google Sign-In script');
+        setError('Google Sign-In is temporarily unavailable. Please try email login.');
+      };
       document.head.appendChild(script);
     };
 
     const initializeGoogle = () => {
-      if (window.google) {
-        window.google.accounts.id.initialize({
-          client_id: GOOGLE_CLIENT_ID,
-          callback: handleGoogleResponse,
-          auto_select: false,
-          cancel_on_tap_outside: true
-        });
+      try {
+        if (window.google && window.google.accounts) {
+          window.google.accounts.id.initialize({
+            client_id: GOOGLE_CLIENT_ID,
+            callback: handleGoogleResponse,
+            auto_select: false,
+            cancel_on_tap_outside: true,
+            use_fedcm_for_prompt: false
+          });
+        }
+      } catch (error) {
+        console.error('Google initialization error:', error);
+        setError('Google Sign-In initialization failed.');
       }
     };
 
@@ -72,28 +79,62 @@ export default function Login() {
     }
   };
 
+  const handleGithubLogin = () => {
+    try {
+      // GitHub OAuth URL
+      const clientId = 'Ov23liJ2EJqT6I1U83AK'; // Real GitHub Client ID
+      const redirectUri = encodeURIComponent(
+        window.location.hostname === 'localhost' 
+          ? 'http://localhost:5173/auth/github/callback'
+          : 'https://plusdsa.vercel.app/auth/github/callback'
+      );
+      const scope = 'user:email';
+      
+      const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${Date.now()}`;
+      
+      // Redirect to GitHub
+      window.location.href = githubAuthUrl;
+    } catch (error) {
+      console.error('GitHub login error:', error);
+      setError('GitHub authentication failed. Please try again.');
+    }
+  };
+
   const handleGoogleLogin = () => {
     try {
-      if (window.google) {
-        window.google.accounts.id.prompt((notification) => {
-          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-            // Fallback to renderButton if prompt fails
-            const buttonDiv = document.getElementById('google-signin-button');
-            if (buttonDiv) {
-              window.google.accounts.id.renderButton(buttonDiv, {
-                theme: 'outline',
-                size: 'large',
-                width: '100%'
-              });
-            }
-          }
+      if (window.google && window.google.accounts) {
+        // Create a temporary button for Google Sign-In
+        const tempDiv = document.createElement('div');
+        tempDiv.style.position = 'absolute';
+        tempDiv.style.top = '-9999px';
+        tempDiv.id = 'temp-google-signin';
+        document.body.appendChild(tempDiv);
+        
+        window.google.accounts.id.renderButton(tempDiv, {
+          theme: 'outline',
+          size: 'large',
+          width: '100%',
+          text: 'signin_with',
+          shape: 'rectangular'
         });
+        
+        // Trigger click on the rendered button
+        setTimeout(() => {
+          const googleButton = tempDiv.querySelector('div[role="button"]');
+          if (googleButton) {
+            googleButton.click();
+          } else {
+            // Fallback to prompt
+            window.google.accounts.id.prompt();
+          }
+          document.body.removeChild(tempDiv);
+        }, 100);
       } else {
-        setError('Google Sign-In not loaded. Please refresh the page.');
+        setError('Google Sign-In not available. Please use email login.');
       }
     } catch (error) {
       console.error('Google login error:', error);
-      setError('Google authentication failed. Please try again.');
+      setError('Google authentication temporarily unavailable. Please use email login.');
     }
   };
 
@@ -254,9 +295,37 @@ export default function Login() {
             </button>
           </form>
 
+          <div className="divider-container">
+            <div className="divider-line">
+              <div className="divider-border" />
+            </div>
+            <div className="divider-text-container">
+              <span className="divider-text">
+                Or continue with
+              </span>
+            </div>
+          </div>
 
-
-
+          <div className="social-buttons">
+            <button
+              type="button"
+              onClick={handleGoogleLogin}
+              disabled={loading}
+              className="google-signin-button"
+            >
+              <FaGoogle className="google-icon" />
+              Sign in with Google
+            </button>
+            <button
+              type="button"
+              onClick={handleGithubLogin}
+              disabled={loading}
+              className="github-signin-button"
+            >
+              <FaGithub className="github-icon" />
+              Sign in with GitHub
+            </button>
+          </div>
 
           <p className="signup-link-container">
             Don't have an account?{' '}

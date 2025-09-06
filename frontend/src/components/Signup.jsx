@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaSpinner, FaGoogle } from 'react-icons/fa';
+import { FaSpinner, FaGoogle, FaGithub } from 'react-icons/fa';
 import axios from 'axios';
 import { useTheme } from '../contexts/ThemeContext';
 import GoogleSignIn from './GoogleSignIn';
 import './Signup.css';
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}/api`;
 
 
 function Signup() {
@@ -21,30 +21,42 @@ function Signup() {
   const { isDark, toggleTheme } = useTheme();
 
   useEffect(() => {
-    if (document.querySelector('script[src="https://accounts.google.com/gsi/client"]')) {
+    const loadGoogleScript = () => {
       if (window.google) {
-        window.google.accounts.id.initialize({
-          client_id: '650760834469-56i14787333t7i8lnh7ooo4t98g9a4q9.apps.googleusercontent.com',
-          callback: handleGoogleResponse
-        });
+        initializeGoogle();
+        return;
       }
-      return;
-    }
 
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.defer = true;
-    document.head.appendChild(script);
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.onload = initializeGoogle;
+      script.onerror = () => {
+        console.error('Failed to load Google Sign-In script');
+        setError('Google Sign-In is temporarily unavailable. Please try email signup.');
+      };
+      document.head.appendChild(script);
+    };
 
-    script.onload = () => {
-      if (window.google) {
-        window.google.accounts.id.initialize({
-          client_id: '650760834469-56i14787333t7i8lnh7ooo4t98g9a4q9.apps.googleusercontent.com',
-          callback: handleGoogleResponse
-        });
+    const initializeGoogle = () => {
+      try {
+        if (window.google && window.google.accounts) {
+          window.google.accounts.id.initialize({
+            client_id: '650760834469-56i14787333t7i8lnh7ooo4t98g9a4q9.apps.googleusercontent.com',
+            callback: handleGoogleResponse,
+            auto_select: false,
+            cancel_on_tap_outside: true,
+            use_fedcm_for_prompt: false
+          });
+        }
+      } catch (error) {
+        console.error('Google initialization error:', error);
+        setError('Google Sign-In initialization failed.');
       }
     };
+
+    loadGoogleScript();
   }, []);
 
   const handleGoogleResponse = async (response) => {
@@ -69,25 +81,62 @@ function Signup() {
     }
   };
 
-  const handleGoogleSignup = async () => {
+  const handleGithubSignup = () => {
     try {
-      setLoading(true);
-      // Simulate Google signup for demo
-      const demoUser = {
-        name: 'Demo User',
-        email: 'demo@gmail.com',
-        id: 'demo123'
-      };
+      // GitHub OAuth URL
+      const clientId = 'Ov23liJ2EJqT6I1U83AK'; // Real GitHub Client ID
+      const redirectUri = encodeURIComponent(
+        window.location.hostname === 'localhost' 
+          ? 'http://localhost:5173/auth/github/callback'
+          : 'https://plusdsa.vercel.app/auth/github/callback'
+      );
+      const scope = 'user:email';
       
-      const token = 'demo-token-' + Date.now();
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(demoUser));
-      localStorage.setItem('signupDate', new Date().toISOString());
-      navigate('/dsa-sheet');
+      const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${Date.now()}`;
+      
+      // Redirect to GitHub
+      window.location.href = githubAuthUrl;
     } catch (error) {
+      console.error('GitHub signup error:', error);
+      setError('GitHub authentication failed. Please try again.');
+    }
+  };
+
+  const handleGoogleSignup = () => {
+    try {
+      if (window.google && window.google.accounts) {
+        // Create a temporary button for Google Sign-Up
+        const tempDiv = document.createElement('div');
+        tempDiv.style.position = 'absolute';
+        tempDiv.style.top = '-9999px';
+        tempDiv.id = 'temp-google-signup';
+        document.body.appendChild(tempDiv);
+        
+        window.google.accounts.id.renderButton(tempDiv, {
+          theme: 'outline',
+          size: 'large',
+          width: '100%',
+          text: 'signup_with',
+          shape: 'rectangular'
+        });
+        
+        // Trigger click on the rendered button
+        setTimeout(() => {
+          const googleButton = tempDiv.querySelector('div[role="button"]');
+          if (googleButton) {
+            googleButton.click();
+          } else {
+            // Fallback to prompt
+            window.google.accounts.id.prompt();
+          }
+          document.body.removeChild(tempDiv);
+        }, 100);
+      } else {
+        setError('Google Sign-In not available. Please use email signup.');
+      }
+    } catch (error) {
+      console.error('Google signup error:', error);
       setError('Google authentication temporarily unavailable. Please use email signup.');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -318,12 +367,25 @@ function Signup() {
           </div>
 
           <div className="social-buttons">
-            <div className="google-signin-wrapper">
-              <GoogleSignIn 
-                onSuccess={handleGoogleResponse}
-                onError={(error) => setError('Google authentication failed: ' + error)}
-              />
-            </div>
+            <button
+              type="button"
+              onClick={handleGoogleSignup}
+              disabled={loading}
+              className="google-signin-button"
+            >
+              <FaGoogle className="google-icon" />
+              Sign up with Google
+            </button>
+            <button
+              type="button"
+              onClick={handleGithubSignup}
+              disabled={loading}
+              className="github-signin-button"
+            >
+              <FaGithub className="github-icon" />
+              Sign up with GitHub
+            </button>
+            <div id="google-signup-button" style={{ display: 'none' }}></div>
           </div>
 
           <p className="signup-link-container">

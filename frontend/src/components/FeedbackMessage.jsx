@@ -103,6 +103,17 @@ const FeedbackMessage = ({ isDark }) => {
           >
             Please give us your valuable feedback to help improve the platform.
           </p>
+          <p
+            style={{
+              margin: '8px 0 0 0',
+              fontSize: '12px',
+              color: isDark ? '#10b981' : '#059669',
+              lineHeight: '1.3',
+              fontWeight: '500'
+            }}
+          >
+            💡 We don't run ads to keep PlusDSA free. Please share with friends! 🚀
+          </p>
         </div>
         
         <button

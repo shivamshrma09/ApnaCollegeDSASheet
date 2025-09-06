@@ -1,7 +1,6 @@
-
 const mongoose = require('mongoose');
 
-const discussionMessageSchema = new mongoose.Schema({
+const discussionSchema = new mongoose.Schema({
   problemId: {
     type: Number,
     required: true,
@@ -9,11 +8,13 @@ const discussionMessageSchema = new mongoose.Schema({
   },
   content: {
     type: String,
-    required: true
+    required: true,
+    maxlength: 2000
   },
   userId: {
     type: String,
-    required: true
+    required: true,
+    index: true
   },
   userName: {
     type: String,
@@ -24,31 +25,28 @@ const discussionMessageSchema = new mongoose.Schema({
     enum: ['user', 'ai'],
     default: 'user'
   },
-  isPrivate: {
-    type: Boolean,
-    default: false
-  },
-  fileUrl: {
-    type: String
-  },
-  replyTo: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'DiscussionMessage'
-  },
   upvotes: {
     type: Number,
     default: 0
   },
   upvotedBy: [{
     type: String
-  }]
+  }],
+  replyTo: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Discussion',
+    default: null
+  },
+  isPrivate: {
+    type: Boolean,
+    default: false
+  }
 }, {
   timestamps: true
 });
 
 // Indexes for better performance
-discussionMessageSchema.index({ problemId: 1, createdAt: 1 });
-discussionMessageSchema.index({ userId: 1, createdAt: -1 });
-discussionMessageSchema.index({ problemId: 1, isPrivate: 1, userId: 1 });
+discussionSchema.index({ problemId: 1, createdAt: 1 });
+discussionSchema.index({ userId: 1, createdAt: -1 });
 
-module.exports = mongoose.model('DiscussionMessage', discussionMessageSchema);
+module.exports = mongoose.model('Discussion', discussionSchema);

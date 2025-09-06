@@ -59,8 +59,8 @@ export const useTimer = (problemId) => {
   }, [problemId]);
 
   return {
-    time,
-    isRunning,
+    timeSpent: time,
+    isActive: isRunning,
     startTimer,
     stopTimer,
     resetTimer,

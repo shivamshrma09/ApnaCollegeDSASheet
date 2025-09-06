@@ -37,38 +37,30 @@ const upload = multer({
 });
 
 // Get messages for a problem
-router.get('/:problemId', auth, async (req, res) => {
+router.get('/:problemId', async (req, res) => {
   try {
     const { problemId } = req.params;
-    const userId = req.user.id;
     
-    // Get all messages, but filter private AI messages
     const messages = await Discussion.find({ 
-      problemId: parseInt(problemId),
-      $or: [
-        { isPrivate: { $ne: true } }, // Non-private messages
-        { isPrivate: true, userId: userId } // Private messages for current user
-      ]
+      problemId: parseInt(problemId)
     })
       .populate('replyTo')
       .sort({ createdAt: 1 })
       .limit(100);
     res.json(messages);
   } catch (error) {
+    console.error('Get messages error:', error);
     res.status(500).json({ message: error.message });
   }
 });
 
 // Send a message
-router.post('/send', auth, upload.single('file'), async (req, res) => {
+router.post('/send', async (req, res) => {
   try {
-    const { problemId, content, userId, userName, replyTo, isPrivate } = req.body;
-    
-    console.log('Discussion send request:', { problemId, content, userId, userName, replyTo, isPrivate });
+    const { problemId, content, userId, userName, replyTo } = req.body;
     
     if (!problemId || !content || !userId || !userName) {
-      console.log('Missing fields:', { problemId, content, userId, userName });
-      return res.status(400).json({ message: 'Missing required fields', received: { problemId, content, userId, userName } });
+      return res.status(400).json({ message: 'Missing required fields' });
     }
     
     const message = new Discussion({
@@ -77,34 +69,20 @@ router.post('/send', auth, upload.single('file'), async (req, res) => {
       userId,
       userName,
       type: 'user',
-      fileUrl: req.file ? `/uploads/discussions/${req.file.filename}` : null,
-      replyTo: replyTo || null,
-      isPrivate: isPrivate || false
+      replyTo: replyTo || null
     });
     
     await message.save();
     
-    // Populate reply if exists
     if (replyTo) {
       await message.populate('replyTo');
     }
     
-    // Emit to appropriate users based on privacy
+    // Emit to all users in the problem room
     try {
       const io = req.app.get('io');
       if (io) {
-        if (message.isPrivate) {
-          // Send only to the user who sent the message
-          const sockets = await io.in(`problem_${problemId}`).fetchSockets();
-          for (const socket of sockets) {
-            if (socket.userId === userId) {
-              socket.emit('newDiscussionMessage', message);
-            }
-          }
-        } else {
-          // Send to all users in the problem room
-          io.to(`problem_${problemId}`).emit('newDiscussionMessage', message);
-        }
+        io.to(`problem_${problemId}`).emit('newDiscussionMessage', message);
       }
     } catch (socketError) {
       console.error('Socket emission error:', socketError);
@@ -287,21 +265,10 @@ router.post('/upvote/:messageId', auth, async (req, res) => {
   }
 });
 
-// Get recent chat history for user
-router.get('/recent', auth, async (req, res) => {
+// Get recent chat history
+router.get('/recent', async (req, res) => {
   try {
-    const userId = req.user.id;
-    
-    // Get recent discussions where user participated
     const recentChats = await Discussion.aggregate([
-      {
-        $match: {
-          $or: [
-            { userId: userId },
-            { isPrivate: { $ne: true } } // Include public messages from all users
-          ]
-        }
-      },
       {
         $group: {
           _id: '$problemId',

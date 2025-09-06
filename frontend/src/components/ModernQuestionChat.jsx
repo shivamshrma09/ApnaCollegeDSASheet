@@ -36,7 +36,7 @@ const ModernQuestionChat = ({ isOpen, onClose, questionId, questionTitle }) => {
 
   const loadMessages = async () => {
     try {
-      const response = await fetch(`http://localhost:5001/api/question-chat/${questionId}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}/api`}/question-chat/${questionId}`);
       if (response.ok) {
         const data = await response.json();
         setMessages(Array.isArray(data.messages) ? data.messages : []);
@@ -56,7 +56,7 @@ const ModernQuestionChat = ({ isOpen, onClose, questionId, questionTitle }) => {
     setIsTyping(true);
 
     try {
-      const response = await fetch(`http://localhost:5001/api/question-chat/${questionId}/send`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}/api`}/question-chat/${questionId}/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

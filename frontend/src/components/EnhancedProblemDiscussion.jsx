@@ -3,10 +3,10 @@ import { useTheme } from '../contexts/ThemeContext';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}/api`;
 
 const getAuthHeaders = async () => {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
   return {
     headers: {
       'Authorization': `Bearer ${token}`,
@@ -28,15 +28,15 @@ const EnhancedProblemDiscussion = ({ isOpen, onClose, problem, userId }) => {
   const [recentChats, setRecentChats] = useState([]);
   const messagesEndRef = useRef(null);
 
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const user = JSON.parse(sessionStorage.getItem('user') || '{}');
 
   useEffect(() => {
     if (isOpen && problem) {
       fetchMessages();
       fetchRecentChats(); // Auto-load recent chats
       
-      const token = localStorage.getItem('token');
-      const newSocket = io('http://localhost:5001', { auth: { token } });
+      const token = sessionStorage.getItem('token');
+      const newSocket = io(import.meta.env.VITE_SOCKET_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}`, { auth: { token } });
       setSocket(newSocket);
       
       newSocket.emit('joinProblem', problem.id);
@@ -71,18 +71,20 @@ const EnhancedProblemDiscussion = ({ isOpen, onClose, problem, userId }) => {
   const fetchMessages = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/discussion/${problem.id}`, await getAuthHeaders());
-      setMessages(response.data);
+      setMessages(response.data || []);
     } catch (error) {
       console.error('Error fetching messages:', error);
+
     }
   };
 
   const fetchRecentChats = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/discussion/recent`, await getAuthHeaders());
-      setRecentChats(response.data);
+      setRecentChats(response.data || []);
     } catch (error) {
       console.error('Error fetching recent chats:', error);
+
     }
   };
 
@@ -102,7 +104,12 @@ const EnhancedProblemDiscussion = ({ isOpen, onClose, problem, userId }) => {
 
       const response = await axios.post(`${API_BASE_URL}/discussion/send`, messageData, await getAuthHeaders());
 
-      const newMsg = { ...response.data, id: response.data._id || `user-${Date.now()}-${Math.random()}` };
+      const newMsg = { 
+        ...response.data, 
+        id: response.data._id || `user-${Date.now()}-${Math.random()}`,
+        timestamp: new Date().toISOString()
+      };
+      
       setMessages(prev => {
         const exists = prev.some(msg => {
           const existingId = msg._id || msg.id;
@@ -110,7 +117,11 @@ const EnhancedProblemDiscussion = ({ isOpen, onClose, problem, userId }) => {
           return existingId === newId || (msg.content === newMsg.content && msg.userId === newMsg.userId);
         });
         if (exists) return prev;
-        return [...prev, newMsg];
+        const updatedMessages = [...prev, newMsg];
+        
+
+        
+        return updatedMessages;
       });
       
       setNewMessage('');

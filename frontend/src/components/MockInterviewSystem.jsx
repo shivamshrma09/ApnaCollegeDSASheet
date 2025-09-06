@@ -71,7 +71,7 @@ const MockInterviewSystem = ({ isDark, onClose }) => {
         console.log('📄 Resume file attached:', formData.resume.name);
       }
       
-      const backendResponse = await fetch(`http://localhost:5001/api/mock-interview/start`, {
+      const backendResponse = await fetch(`${import.meta.env.VITE_API_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}/api`}/mock-interview/start`, {
         method: 'POST',
         headers: {
           'userid': 'anonymous'
@@ -189,7 +189,7 @@ const MockInterviewSystem = ({ isDark, onClose }) => {
       console.log('📧 Submitting interview for email analysis...');
       
       // Send to backend for analysis and email
-      const response = await fetch(`http://localhost:5001/api/mock-interview/submit`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}/api`}/mock-interview/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

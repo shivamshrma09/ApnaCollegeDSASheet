@@ -1,0 +1,272 @@
+/* Global Responsive Styles for PlusDSA */
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+}
+
+/* Container responsive */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Mobile First Approach */
+@media (max-width: 480px) {
+  /* Extra small phones */
+  .container {
+    padding: 0 8px;
+  }
+  
+  /* Text sizes */
+  h1 { font-size: 20px !important; }
+  h2 { font-size: 18px !important; }
+  h3 { font-size: 16px !important; }
+  
+  /* Buttons */
+  button {
+    min-height: 44px !important;
+    font-size: 14px !important;
+    padding: 12px 16px !important;
+  }
+  
+  /* Forms */
+  input, select, textarea {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    padding: 12px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile & Tablet Portrait */
+  
+  /* Hide desktop elements */
+  .desktop-only {
+    display: none !important;
+  }
+  
+  /* Show mobile elements */
+  .mobile-only {
+    display: block !important;
+  }
+  
+  /* Sidebar responsive */
+  .sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 280px !important;
+    height: 100vh !important;
+    z-index: 1000 !important;
+    transition: left 0.3s ease !important;
+  }
+  
+  .sidebar.open {
+    left: 0 !important;
+  }
+  
+  /* Header responsive */
+  .header {
+    padding: 12px 16px !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  
+  .header-nav {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+  
+  /* Main content */
+  .main-content {
+    padding: 16px 8px !important;
+    margin-left: 0 !important;
+  }
+  
+  /* Cards */
+  .card {
+    margin: 8px 0 !important;
+    padding: 16px !important;
+    border-radius: 12px !important;
+  }
+  
+  /* Tables */
+  .table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  table {
+    min-width: 600px !important;
+  }
+  
+  /* Problem list mobile */
+  .problem-item {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    padding: 16px !important;
+    gap: 8px !important;
+  }
+  
+  .problem-title {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+  }
+  
+  .problem-meta {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  
+  /* Social buttons mobile */
+  .social-buttons {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  
+  .social-buttons button {
+    width: 100% !important;
+  }
+  
+  /* Modal responsive */
+  .modal {
+    margin: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+  }
+  
+  .modal-content {
+    padding: 20px 16px !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Tablet Landscape */
+  
+  .container {
+    padding: 0 24px;
+  }
+  
+  .sidebar {
+    width: 240px !important;
+  }
+  
+  .main-content {
+    margin-left: 240px !important;
+    padding: 24px !important;
+  }
+  
+  /* Grid responsive */
+  .grid-2 {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  
+  .grid-3 {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+@media (min-width: 1025px) {
+  /* Desktop & Laptop */
+  
+  .mobile-only {
+    display: none !important;
+  }
+  
+  .desktop-only {
+    display: block !important;
+  }
+  
+  .sidebar {
+    width: 280px !important;
+    position: fixed !important;
+    left: 0 !important;
+  }
+  
+  .main-content {
+    margin-left: 280px !important;
+    padding: 32px !important;
+  }
+  
+  /* Grid responsive */
+  .grid-2 {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  
+  .grid-3 {
+    grid-template-columns: 1fr 1fr 1fr !important;
+  }
+  
+  .grid-4 {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}
+
+/* Touch friendly */
+@media (hover: none) and (pointer: coarse) {
+  /* Touch devices */
+  button, .clickable {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+  
+  /* Remove hover effects */
+  *:hover {
+    background-color: inherit !important;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Retina displays */
+  img {
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+/* Landscape orientation */
+@media (orientation: landscape) and (max-height: 500px) {
+  .header {
+    padding: 8px 16px !important;
+  }
+  
+  .main-content {
+    padding-top: 8px !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .sidebar,
+  .header-nav,
+  button:not(.print-button) {
+    display: none !important;
+  }
+  
+  .main-content {
+    margin-left: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark mode responsive adjustments */
+@media (prefers-color-scheme: dark) {
+  .auto-dark {
+    background-color: #111111 !important;
+    color: #ffffff !important;
+  }
+}

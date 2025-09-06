@@ -17,7 +17,7 @@ export const SocketProvider = ({ children }) => {
   const [onlineUsers, setOnlineUsers] = useState(0);
 
   useEffect(() => {
-    const newSocket = io('http://localhost:5001', {
+    const newSocket = io(import.meta.env.VITE_SOCKET_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}`, {
       withCredentials: true,
       transports: ['websocket', 'polling']
     });
