@@ -222,16 +222,22 @@ try {
 
 // Socket.IO Connection
 io.on('connection', (socket) => {
-  console.log('✅ User connected:', socket.id);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('✅ User connected:', socket.id);
+  }
   
   socket.on('authenticate', (data) => {
     socket.userId = data.userId;
-    console.log(`User ${socket.id} authenticated as ${data.userId}`);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`User ${socket.id} authenticated as ${data.userId}`);
+    }
   });
   
   socket.on('joinProblem', (problemId) => {
     socket.join(`problem_${problemId}`);
-    console.log(`User ${socket.id} joined problem ${problemId}`);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`User ${socket.id} joined problem ${problemId}`);
+    }
   });
   
   socket.on('error', (error) => {
@@ -239,7 +245,9 @@ io.on('connection', (socket) => {
   });
   
   socket.on('disconnect', (reason) => {
-    console.log('User disconnected:', socket.id, 'Reason:', reason);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('User disconnected:', socket.id, 'Reason:', reason);
+    }
   });
 });
 
@@ -292,13 +300,16 @@ server.listen(PORT, '0.0.0.0', () => {
   console.log(`🔐 JWT Secret: ${process.env.JWT_SECRET ? '✅ OK' : '❌ MISSING'}`);
   console.log(`🤖 Gemini AI: ${process.env.GEMINI_API_KEY ? '✅ OK' : '❌ Missing'}`);
   
-  // Setup cron jobs
-  setupSpacedRepetitionCron();
-  setupDailyEmailCron();
-  setupWeeklyAnalysisCron();
-  setupDailyMorningEmailCron();
-  setupWeeklyReportCron();
-  setupDailyReminderCron();
+  // Setup cron jobs only in production
+  if (process.env.NODE_ENV === 'production') {
+    setupSpacedRepetitionCron();
+    setupDailyEmailCron();
+    setupWeeklyAnalysisCron();
+    setupDailyMorningEmailCron();
+    setupWeeklyReportCron();
+    setupDailyReminderCron();
+    console.log('✅ Cron jobs initialized');
+  }
   
   console.log('='.repeat(50));
   console.log('Available endpoints:');

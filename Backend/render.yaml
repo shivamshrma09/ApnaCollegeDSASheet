@@ -3,7 +3,7 @@ services:
     name: dsa-sheet-backend
     env: node
     plan: free
-    buildCommand: npm install
+    buildCommand: npm ci --only=production
     startCommand: npm start
     healthCheckPath: /api/health
     envVars:
@@ -11,3 +11,5 @@ services:
         value: production
       - key: PORT
         value: 10000
+      - key: NPM_CONFIG_PRODUCTION
+        value: true

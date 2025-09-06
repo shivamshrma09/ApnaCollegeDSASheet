@@ -7,3 +7,13 @@ build/
 coverage/
 *.tmp
 *.temp
+test-*.js
+debug-*.js
+scripts/
+tests/
+uploads/
+*.bat
+*.html
+*.txt
+*.md
+README.md
