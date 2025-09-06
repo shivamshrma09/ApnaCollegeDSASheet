@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaSpinner, FaGoogle, FaLinkedin } from 'react-icons/fa';
-import axios from 'axios';
+import api from '../utils/api';
 import GoogleSignIn from './GoogleSignIn';
-import QuickGoogleAuth from './QuickGoogleAuth';
+import { useTheme } from '../contexts/ThemeContext';
 import './Login.css';
-
-const API_BASE_URL = 'http://localhost:5001/api';
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '650760834469-56i14787333t7i8lnh7ooo4t98g9a4q9.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || null;
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -15,9 +13,13 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Skip Google OAuth if disabled
+    if (!GOOGLE_CLIENT_ID) return;
+    
     const loadGoogleScript = () => {
       if (window.google) {
         initializeGoogle();
@@ -51,8 +53,11 @@ export default function Login() {
       setLoading(true);
       setError('');
       
-      const result = await axios.post(`${API_BASE_URL}/auth/google`, {
-        token: response.credential
+      const result = await api.post('/auth/google', {
+        token: response.credential,
+        name: response.name,
+        email: response.email,
+        avatar: response.avatar
       });
       
       const { token, user } = result.data;
@@ -119,18 +124,22 @@ export default function Login() {
     }
     setLoading(true);
     try {
-      const response = await axios.post(`${API_BASE_URL}/auth/login`, {
+      console.log('🚀 Attempting login for:', email);
+      const response = await api.post('/auth/login', {
         email,
         password
       });
       
+      console.log('✅ Login response received:', response.data);
       const { token, user } = response.data;
       
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
       
-      navigate('/dsa-sheet');
+      console.log('✅ Login successful, navigating to DSA sheet');
+      window.location.href = '/dsa-sheet';
     } catch (err) {
+      console.error('❌ Login error:', err.response?.data || err.message);
       setError(err.response?.data?.error || 'Invalid email or password. Try again.');
     } finally {
       setLoading(false);
@@ -141,23 +150,36 @@ export default function Login() {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <img
-            src="/logo.png"
-            alt="Logo"
-            className="login-logo"
-          />
+          <div className="login-logo-container" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+            <img
+              src={isDark ? "/dark.png" : "/light.png"}
+              alt="DSA Sheet - Apna College"
+              className="login-logo"
+              style={{
+                height: '60px',
+                width: 'auto',
+                objectFit: 'contain'
+              }}
+            />
+          </div>
           <h1 className="login-title">
             <span className="login-title-highlight">DSA</span> Sheet
           </h1>
-          <p className="login-subtitle">Sign in to continue</p>
+          <p className="login-subtitle">Sign in to continue your coding journey</p>
           <button 
-            onClick={() => {
-              document.body.classList.toggle('dark');
-              localStorage.setItem('darkMode', document.body.classList.contains('dark'));
-            }}
+            onClick={toggleTheme}
             className="dark-mode-toggle"
+            style={{
+              background: 'none',
+              border: 'none',
+              fontSize: '24px',
+              cursor: 'pointer',
+              padding: '8px',
+              borderRadius: '50%',
+              transition: 'background-color 0.2s ease'
+            }}
           >
-            🌙
+            {isDark ? '☀️' : '🌙'}
           </button>
         </div>
         
@@ -232,32 +254,9 @@ export default function Login() {
             </button>
           </form>
 
-          <div className="divider-container">
-            <div className="divider-line">
-              <div className="divider-border" />
-            </div>
-            <div className="divider-text-container">
-              <span className="divider-text">
-                Or continue with
-              </span>
-            </div>
-          </div>
 
-          <div className="social-buttons">
-            <div className="google-signin-wrapper">
-              <GoogleSignIn 
-                onSuccess={handleGoogleResponse}
-                onError={(error) => setError('Google authentication failed: ' + error)}
-              />
-            </div>
-            <button
-              onClick={() => alert('LinkedIn login')}
-              className="social-button"
-            >
-              <FaLinkedin className="social-icon linkedin-icon" />
-              LinkedIn
-            </button>
-          </div>
+
+
 
           <p className="signup-link-container">
             Don't have an account?{' '}

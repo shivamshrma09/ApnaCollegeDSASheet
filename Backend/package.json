@@ -5,25 +5,56 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "test": "node testAPI.js",
+    "fix-user-data": "node scripts/fixUserData.js",
+    "init-sheets": "node scripts/initializeAllSheets.js",
+    "check-health": "curl http://localhost:5001/api/health || echo 'Server not running'",
+    "test-spaced-repetition": "node test-spaced-repetition.js",
+    "quick-test-sr": "node quick-test-spaced-repetition.js",
+    "test-custom-flow": "node test-custom-flow.js",
+    "debug-custom-flow": "node debug-custom-flow.js",
+    "test-dual-condition": "node test-dual-condition.js",
+    "test-special-logic": "node test-special-logic.js",
+    "debug-stage-movement": "node debug-stage-movement.js",
+    "test-complete-flow": "node test-complete-flow.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "mongoose": "^7.5.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.2",
-    "socket.io": "^4.7.2",
-    "axios": "^1.5.0",
     "@google/generative-ai": "^0.2.1",
+    "axios": "^1.5.0",
+    "bcryptjs": "^2.4.3",
+    "chartjs-node-canvas": "^5.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "csurf": "^1.11.0",
+    "dotenv": "^16.6.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
     "express-validator": "^7.0.1",
-    "multer": "^1.4.5-lts.1"
+    "helmet": "^7.2.0",
+    "isomorphic-dompurify": "^2.26.0",
+    "jsonwebtoken": "^9.0.2",
+    "mammoth": "^1.10.0",
+    "mongoose": "^7.5.0",
+    "multer": "^1.4.5-lts.1",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.10.1",
+    "pdf-parse": "^1.1.1",
+    "puppeteer": "^21.0.0",
+    "socket.io": "^4.7.2",
+    "validator": "^13.11.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
   },
   "engines": {
     "node": ">=16.0.0"
-  }
+  },
+  "keywords": [
+    "dsa",
+    "algorithms",
+    "data-structures",
+    "coding",
+    "interview-prep"
+  ]
 }

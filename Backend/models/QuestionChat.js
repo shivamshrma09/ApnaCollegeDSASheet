@@ -35,6 +35,15 @@ const questionChatSchema = new mongoose.Schema({
       type: Boolean,
       default: false
     },
+    isPrivateAI: {
+      type: Boolean,
+      default: false
+    },
+    privateUserId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null
+    },
     replyTo: {
       type: mongoose.Schema.Types.ObjectId,
       default: null
@@ -43,7 +52,7 @@ const questionChatSchema = new mongoose.Schema({
       type: Date,
       default: Date.now
     },
-    likes: [{
+    upvotes: [{
       user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
@@ -52,6 +61,13 @@ const questionChatSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
       }
+    }],
+    seen: {
+      type: Boolean,
+      default: false
+    },
+    taggedUsers: [{
+      type: String
     }],
     replies: [{
       sender: {

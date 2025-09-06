@@ -17,3 +17,117 @@ body {
   margin: 0 auto;
   padding: 0 20px;
 }
+
+/* Animations */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Smooth transitions */
+* {
+  transition: all 0.2s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Logo Styles */
+.logo, .login-logo, .signup-logo {
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
+.header-logo-link:hover,
+.login-logo-container:hover,
+.signup-logo-container:hover {
+  opacity: 0.9;
+}
+
+/* Smooth theme transitions for all elements */
+*, *::before, *::after {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease !important;
+}
+
+/* Theme transition for containers */
+.dsa-sheet-container, .login-container, .signup-container {
+  transition: background-color 0.3s ease, color 0.3s ease !important;
+}
+
+/* Theme transition for headers */
+.dsa-sheet-header, .login-header, .signup-header {
+  transition: background 0.3s ease, border-color 0.3s ease !important;
+}
+
+/* Responsive logo sizing */
+@media (max-width: 768px) {
+  .logo {
+    height: 35px !important;
+  }
+  
+  .login-logo, .signup-logo {
+    height: 50px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    height: 30px !important;
+  }
+  
+  .login-logo, .signup-logo {
+    height: 45px !important;
+  }
+}

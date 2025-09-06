@@ -15,6 +15,8 @@ const QuestionChat = ({ problem, isOpen, onClose }) => {
   const [socket, setSocket] = useState(null);
   const [hasNewReplies, setHasNewReplies] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [upvotedMessages, setUpvotedMessages] = useState(new Set());
+  const [taggedUser, setTaggedUser] = useState(null);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
   const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -72,9 +74,12 @@ const QuestionChat = ({ problem, isOpen, onClose }) => {
     formData.append('message', newMessage);
     formData.append('senderName', user.name || 'Anonymous');
     formData.append('senderId', user.id || 'anonymous');
-    formData.append('isQuestion', isQuestion);
+    formData.append('isQuestion', false);
     formData.append('problemTitle', problem.title);
     formData.append('problemLink', problem.link);
+    
+    console.log('Sending message with isQuestion:', isQuestion);
+    console.log('FormData isQuestion value:', formData.get('isQuestion'));
     
     selectedFiles.forEach((file) => {
       formData.append('files', file);
@@ -96,7 +101,7 @@ const QuestionChat = ({ problem, isOpen, onClose }) => {
     }
     
     setNewMessage('');
-    setIsQuestion(false);
+    // Don't reset isQuestion - let user control it
     setSelectedFiles([]);
   };
 
@@ -129,15 +134,33 @@ const QuestionChat = ({ problem, isOpen, onClose }) => {
     setReplyTo(null);
   };
 
-  const likeMessage = async (messageId) => {
+  const upvoteMessage = async (messageId) => {
     try {
-      await axios.post(`${API_BASE_URL}/question-chat/${problem.id}/like/${messageId}`, {
+      const response = await axios.post(`${API_BASE_URL}/question-chat/${problem.id}/upvote/${messageId}`, {
         userId: user.id || 'anonymous'
       });
-      fetchMessages();
+      
+      if (response.data.success) {
+        setUpvotedMessages(prev => {
+          const newSet = new Set(prev);
+          if (newSet.has(messageId)) {
+            newSet.delete(messageId);
+          } else {
+            newSet.add(messageId);
+          }
+          return newSet;
+        });
+        fetchMessages();
+      }
     } catch (error) {
-      console.error('Failed to like message.');
+      console.error('Failed to upvote message.');
     }
+  };
+
+  const replyToUser = (message) => {
+    setTaggedUser(message.senderName);
+    setReplyTo(message._id);
+    setReplyText(`@${message.senderName} `);
   };
 
   const scrollToBottom = () => {
@@ -164,9 +187,18 @@ const QuestionChat = ({ problem, isOpen, onClose }) => {
               <p>Ask questions & get help from AI and community</p>
             </div>
           </div>
-          <button className="chat-close" onClick={onClose}>
-            <FaTimes />
-          </button>
+          <div className="header-actions">
+            <button className="clear-chat-btn" onClick={() => {
+              if (window.confirm('Clear all messages? This cannot be undone.')) {
+                setMessages([]);
+              }
+            }}>
+              🗑️ Clear
+            </button>
+            <button className="chat-close" onClick={onClose}>
+              <FaTimes />
+            </button>
+          </div>
         </div>
 
         <div className="question-chat-messages">
@@ -240,23 +272,31 @@ const QuestionChat = ({ problem, isOpen, onClose }) => {
 
                 <div className="message-actions">
                   <button 
-                    className="like-btn"
-                    onClick={() => likeMessage(msg._id)}
+                    className={`action-btn upvote-btn ${upvotedMessages.has(msg._id) ? 'upvoted' : ''}`}
+                    onClick={() => upvoteMessage(msg._id)}
                   >
-                    <FaHeart />
-                    <span>{msg.likes?.length || 0}</span>
+                    ▲ {msg.upvotes?.length || 0}
                   </button>
                   
-                  {!msg.isAI && (
-                    <button 
-                      className="reply-btn"
-                      onClick={() => setReplyTo(replyTo === msg._id ? null : msg._id)}
-                    >
-                      <FaReply />
-                      Reply
-                    </button>
+                  <button 
+                    className="action-btn reply-btn"
+                    onClick={() => replyToUser(msg)}
+                  >
+                    <FaReply /> Reply
+                  </button>
+                  
+                  {isCurrentUser && (
+                    <div className={`seen-indicator ${msg.seen ? 'seen' : ''}`}>
+                      {msg.seen ? '✓✓ Seen' : '✓ Sent'}
+                    </div>
                   )}
                 </div>
+                
+                {msg.message.includes('@') && (
+                  <div className="message-tag">
+                    {msg.message.match(/@\w+/g)?.map(tag => tag).join(' ')}
+                  </div>
+                )}
 
                 {/* Reply Input */}
                 {replyTo === msg._id && (
@@ -281,17 +321,7 @@ const QuestionChat = ({ problem, isOpen, onClose }) => {
         </div>
 
         <div className="question-chat-input">
-          <div className="input-options">
-            <label className="question-toggle">
-              <input
-                type="checkbox"
-                checked={isQuestion}
-                onChange={(e) => setIsQuestion(e.target.checked)}
-              />
-              <FaQuestion />
-              <span>Ask Question (AI will respond)</span>
-            </label>
-          </div>
+
           {selectedFiles.length > 0 && (
             <div className="file-preview">
               {selectedFiles.map((file, index) => (
@@ -329,7 +359,7 @@ const QuestionChat = ({ problem, isOpen, onClose }) => {
             <textarea
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              placeholder={isQuestion ? "Ask your question about this problem..." : "Share your thoughts..."}
+              placeholder="Share your thoughts..."
               onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), sendMessage())}
               className="message-input"
               rows={1}

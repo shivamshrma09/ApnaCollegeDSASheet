@@ -1,7 +1,11 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const csrf = require('csurf');
 const router = express.Router();
+
+// CSRF Protection
+const csrfProtection = csrf({ cookie: true });
 const QuestionChat = require('../models/QuestionChat');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
@@ -32,12 +36,13 @@ const upload = multer({
 });
 
 // Initialize Gemini AI
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'your-gemini-api-key');
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_DISCUSSION || 'AIzaSyCl-Zlu-zV3GpRaOReOa7FcW7iabxc2wnM');
 
 // Get chat for specific problem
 router.get('/:problemId', async (req, res) => {
   try {
     const { problemId } = req.params;
+    const userId = req.query.userId;
     
     let chat = await QuestionChat.findOne({ problemId: parseInt(problemId) })
       .populate('messages.sender', 'name email')
@@ -47,9 +52,15 @@ router.get('/:problemId', async (req, res) => {
       return res.json({ messages: [], hasNewReplies: false });
     }
     
+    // Filter messages: hide all AI messages
+    const filteredMessages = chat.messages.filter(msg => {
+      // Hide all AI messages
+      return !msg.isAI;
+    });
+    
     res.json({ 
-      messages: chat.messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)),
-      hasNewReplies: chat.messages.some(msg => msg.replies.length > 0)
+      messages: filteredMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)),
+      hasNewReplies: filteredMessages.some(msg => msg.replies.length > 0)
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -57,10 +68,13 @@ router.get('/:problemId', async (req, res) => {
 });
 
 // Send message to problem chat
-router.post('/:problemId/send', upload.array('files', 5), async (req, res) => {
+router.post('/:problemId/send', csrfProtection, upload.array('files', 5), async (req, res) => {
   try {
     const { problemId } = req.params;
     const { message, senderName, senderId, isQuestion, problemTitle, problemLink } = req.body;
+    
+    console.log('Received isQuestion:', isQuestion, 'Type:', typeof isQuestion);
+    console.log('Full request body:', req.body);
     
     let chat = await QuestionChat.findOne({ problemId: parseInt(problemId) });
     
@@ -77,54 +91,16 @@ router.post('/:problemId/send', upload.array('files', 5), async (req, res) => {
       sender: senderId || '64f8a1b2c3d4e5f6a7b8c9d0',
       senderName: senderName || 'Anonymous',
       message,
-      isQuestion: isQuestion || false,
+      isQuestion: isQuestion === 'true' || isQuestion === true,
+      upvotes: [],
+      seen: false,
       timestamp: new Date()
     };
 
     chat.messages.push(newMessage);
     await chat.save();
 
-    // Generate AI response ONLY if checkbox is checked
-    if (isQuestion === true || isQuestion === 'true') {
-      setTimeout(async () => {
-        try {
-          const aiResponse = await generateGeminiResponse(message, problemTitle, problemLink);
-          const aiMessage = {
-            sender: '64f8a1b2c3d4e5f6a7b8c9d1',
-            senderName: 'AI Assistant',
-            message: aiResponse,
-            isAI: true,
-            replyTo: newMessage._id,
-            timestamp: new Date()
-          };
-          
-          chat.messages.push(aiMessage);
-          await chat.save();
-          
-          req.app.get('io').emit(`problemChat_${problemId}`, {
-            type: 'newMessage',
-            message: aiMessage
-          });
-        } catch (error) {
-          console.error('AI failed:', error);
-          const errorMessage = {
-            sender: '64f8a1b2c3d4e5f6a7b8c9d1',
-            senderName: 'System',
-            message: 'AI is currently unavailable. Please try again later.',
-            isAI: false,
-            timestamp: new Date()
-          };
-          
-          chat.messages.push(errorMessage);
-          await chat.save();
-          
-          req.app.get('io').emit(`problemChat_${problemId}`, {
-            type: 'newMessage',
-            message: errorMessage
-          });
-        }
-      }, 3000);
-    }
+    // AI functionality removed - community discussion only
 
     // Emit new message
     req.app.get('io').emit(`problemChat_${problemId}`, {
@@ -139,7 +115,7 @@ router.post('/:problemId/send', upload.array('files', 5), async (req, res) => {
 });
 
 // Reply to a message
-router.post('/:problemId/reply/:messageId', async (req, res) => {
+router.post('/:problemId/reply/:messageId', csrfProtection, async (req, res) => {
   try {
     const { problemId, messageId } = req.params;
     const { message, senderName, senderId } = req.body;
@@ -170,8 +146,8 @@ router.post('/:problemId/reply/:messageId', async (req, res) => {
   }
 });
 
-// Like message
-router.post('/:problemId/like/:messageId', async (req, res) => {
+// Upvote message
+router.post('/:problemId/upvote/:messageId', csrfProtection, async (req, res) => {
   try {
     const { problemId, messageId } = req.params;
     const { userId } = req.body;
@@ -179,15 +155,34 @@ router.post('/:problemId/like/:messageId', async (req, res) => {
     const chat = await QuestionChat.findOne({ problemId: parseInt(problemId) });
     const message = chat.messages.id(messageId);
     
-    const existingLike = message.likes.find(like => like.user.toString() === userId);
-    if (existingLike) {
-      message.likes = message.likes.filter(like => like.user.toString() !== userId);
+    if (!message.upvotes) message.upvotes = [];
+    
+    const existingUpvote = message.upvotes.find(upvote => upvote.user.toString() === userId);
+    if (existingUpvote) {
+      message.upvotes = message.upvotes.filter(upvote => upvote.user.toString() !== userId);
     } else {
-      message.likes.push({ user: userId });
+      message.upvotes.push({ user: userId });
     }
     
     await chat.save();
-    res.json({ success: true, likes: message.likes.length });
+    res.json({ success: true, upvotes: message.upvotes.length });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Mark message as seen
+router.post('/:problemId/seen/:messageId', csrfProtection, async (req, res) => {
+  try {
+    const { problemId, messageId } = req.params;
+    
+    const chat = await QuestionChat.findOne({ problemId: parseInt(problemId) });
+    const message = chat.messages.id(messageId);
+    
+    message.seen = true;
+    await chat.save();
+    
+    res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

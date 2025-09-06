@@ -27,6 +27,10 @@ const problemSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  gfgArticle: {
+    type: String,
+    default: ''
+  },
   hint: {
     type: String,
     default: ''

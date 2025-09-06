@@ -214,6 +214,21 @@ const PlaylistManager = ({
                   </div>
                   <div style={{ display: 'flex', gap: '8px' }}>
                     <button
+                      onClick={() => onViewPlaylist(playlist)}
+                      style={{
+                        backgroundColor: '#3b82f6',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        padding: '6px 12px',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        fontWeight: '500'
+                      }}
+                    >
+                      Start
+                    </button>
+                    <button
                       onClick={() => handleEdit(playlist)}
                       style={{
                         backgroundColor: '#f3f4f6',

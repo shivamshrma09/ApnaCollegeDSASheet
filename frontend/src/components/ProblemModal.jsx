@@ -1,12 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import './ProblemModal.css';
+import RichTextEditor from './RichTextEditor';
+// import { convertPlainTextToHtml } from '../utils/noteUtils'; // File removed
+
+// Simple utility function to replace the deleted noteUtils
+const convertPlainTextToHtml = (text) => {
+  if (!text) return '';
+  if (text.includes('<') && text.includes('>')) return text; // Already HTML
+  return text.replace(/\n/g, '<br>'); // Convert line breaks
+};
+import { useTheme } from '../contexts/ThemeContext';
 
 const ProblemModal = ({ isOpen, onClose, problem, userNote, onSaveNote, onDeleteNote }) => {
+  const { isDark } = useTheme();
   const [note, setNote] = useState(userNote || '');
   const [activeTab, setActiveTab] = useState('note');
 
   useEffect(() => {
-    setNote(userNote || '');
+    // Convert plain text notes to HTML for backward compatibility
+    const noteContent = userNote ? convertPlainTextToHtml(userNote) : '';
+    setNote(noteContent);
   }, [userNote, problem]);
 
   if (!isOpen) return null;
@@ -146,10 +159,19 @@ const ProblemModal = ({ isOpen, onClose, problem, userNote, onSaveNote, onDelete
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div className={`modal-content ${isDark ? 'dark' : ''}`} onClick={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2 className="modal-title">{problem.title}</h2>
-          <button className="modal-close" onClick={onClose}>&times;</button>
+          <h2 className="modal-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L6.5,12L7.91,10.59L11,13.67L16.59,8.09L18,9.5L11,16.5Z"/>
+            </svg>
+            {problem.title}
+          </h2>
+          <button className="modal-close" onClick={onClose}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+            </svg>
+          </button>
         </div>
         
         <div className="modal-tabs">
@@ -157,28 +179,35 @@ const ProblemModal = ({ isOpen, onClose, problem, userNote, onSaveNote, onDelete
             className={`tab-button ${activeTab === 'note' ? 'active' : ''}`}
             onClick={() => setActiveTab('note')}
           >
-            📝 Note
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            </svg>
+            Note
           </button>
           <button 
             className={`tab-button ${activeTab === 'links' ? 'active' : ''}`}
             onClick={() => setActiveTab('links')}
           >
-            🔗 Links
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3.9,12C3.9,10.29 5.29,8.9 7,8.9H11V7H7A5,5 0 0,0 2,12A5,5 0 0,0 7,17H11V15.1H7C5.29,15.1 3.9,13.71 3.9,12M8,13H16V11H8V13M17,7H13V8.9H17C18.71,8.9 20.1,10.29 20.1,12C20.1,13.71 18.71,15.1 17,15.1H13V17H17A5,5 0 0,0 22,12A5,5 0 0,0 17,7Z"/>
+            </svg>
+            Links
           </button>
         </div>
 
         <div className="modal-body">
           {activeTab === 'note' && (
             <div className="note-section">
-              <textarea
+              <RichTextEditor
                 value={note}
-                onChange={(e) => setNote(e.target.value)}
-                placeholder="Add your notes here..."
-                className="note-textarea"
-                rows={8}
+                onChange={setNote}
+                placeholder="Add your DSA notes here... Use the toolbar for formatting!"
               />
               <div className="note-actions">
                 <button className="btn-save" onClick={handleSave}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"/>
+                  </svg>
                   Save Note
                 </button>
                 {userNote && (
@@ -190,6 +219,9 @@ const ProblemModal = ({ isOpen, onClose, problem, userNote, onSaveNote, onDelete
                       onClose();
                     }}
                   >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
+                    </svg>
                     Delete Note
                   </button>
                 )}
@@ -199,46 +231,90 @@ const ProblemModal = ({ isOpen, onClose, problem, userNote, onSaveNote, onDelete
           
           {activeTab === 'links' && (
             <div className="links-section">
-              <div className="link-item">
-                <span className="link-label">Practice:</span>
-                <a href={problem.link} target="_blank" rel="noopener noreferrer" className="link-url">
-                  {problem.link}
-                </a>
-              </div>
-              <div className="link-item">
-                <span className="link-label">Video Solution:</span>
-                <a href={problem.video} target="_blank" rel="noopener noreferrer" className="link-url">
-                  {problem.video}
-                </a>
-              </div>
+              {(problem.leetcode || problem.link) && (
+                <div className="link-item">
+                  <span className="link-label">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{marginRight: '6px'}}>
+                      <path d="M22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2A10,10 0 0,1 22,12M8,7.5A1.5,1.5 0 0,0 6.5,9A1.5,1.5 0 0,0 8,10.5A1.5,1.5 0 0,0 9.5,9A1.5,1.5 0 0,0 8,7.5M15.5,7.5A1.5,1.5 0 0,0 14,9A1.5,1.5 0 0,0 15.5,10.5A1.5,1.5 0 0,0 17,9A1.5,1.5 0 0,0 15.5,7.5M12,17.23C10.25,17.23 8.71,16.5 7.81,15.42L9.23,14C9.68,14.72 10.75,15.23 12,15.23C13.25,15.23 14.32,14.72 14.77,14L16.19,15.42C15.29,16.5 13.75,17.23 12,17.23Z"/>
+                    </svg>
+                    LeetCode:
+                  </span>
+                  <a href={problem.leetcode || problem.link} target="_blank" rel="noopener noreferrer" className="link-url">
+                    {problem.leetcode || problem.link}
+                  </a>
+                </div>
+              )}
+              {problem.gfg && (
+                <div className="link-item">
+                  <span className="link-label">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{marginRight: '6px'}}>
+                      <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8Z"/>
+                    </svg>
+                    GeeksforGeeks:
+                  </span>
+                  <a href={problem.gfg} target="_blank" rel="noopener noreferrer" className="link-url">
+                    {problem.gfg}
+                  </a>
+                </div>
+              )}
+              {(problem.youtube || problem.video) && (
+                <div className="link-item">
+                  <span className="link-label">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{marginRight: '6px'}}>
+                      <path d="M10,16.5V7.5L16,12M20,4.4C19.4,4.2 15.7,4 12,4C8.3,4 4.6,4.19 4,4.38C2.44,4.9 2,8.4 2,12C2,15.59 2.44,19.1 4,19.61C4.6,19.81 8.3,20 12,20C15.7,20 19.4,19.81 20,19.61C21.56,19.1 22,15.59 22,12C22,8.4 21.56,4.91 20,4.4Z"/>
+                    </svg>
+                    Video Solution:
+                  </span>
+                  <a href={problem.youtube || problem.video} target="_blank" rel="noopener noreferrer" className="link-url">
+                    {problem.youtube || problem.video}
+                  </a>
+                </div>
+              )}
               <div className="problem-info">
                 <div className="info-item">
-                  <span className="info-label">Difficulty:</span>
+                  <span className="info-label">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{marginRight: '6px'}}>
+                      <path d="M12,2L13.09,8.26L22,9L14,14L17,23L12,18L7,23L10,14L2,9L10.91,8.26L12,2Z"/>
+                    </svg>
+                    Difficulty:
+                  </span>
                   <span className={`difficulty-tag ${problem.difficulty.toLowerCase()}`}>
                     {problem.difficulty}
                   </span>
                 </div>
-                <div className="info-item">
-                  <span className="info-label">Companies:</span>
-                  <span className="companies-text">{problem.companies}</span>
-                  <div className="company-logos">
-                    {getCompanyLogos(problem.companies).map((company, idx) => (
-                      <img 
-                        key={idx}
-                        src={`https://logo.clearbit.com/${company.domain}`}
-                        alt={company.name}
-                        className="company-logo"
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                        }}
-                      />
-                    ))}
+                {problem.companies && (
+                  <div className="info-item">
+                    <span className="info-label">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{marginRight: '6px'}}>
+                        <path d="M12,7V3H2V21H22V7H12M6,19H4V17H6V19M6,15H4V13H6V15M6,11H4V9H6V11M6,7H4V5H6V7M10,19H8V17H10V19M10,15H8V13H10V15M10,11H8V9H10V11M10,7H8V5H10V7M20,19H12V17H20V19M20,15H12V13H20V15M20,11H12V9H20V11Z"/>
+                      </svg>
+                      Companies:
+                    </span>
+                    <span className="companies-text">{Array.isArray(problem.companies) ? problem.companies.join(', ') : problem.companies}</span>
+                    <div className="company-logos">
+                      {getCompanyLogos(Array.isArray(problem.companies) ? problem.companies.join(', ') : problem.companies || '').map((company, idx) => (
+                        <img 
+                          key={idx}
+                          src={`https://logo.clearbit.com/${company.domain}`}
+                          alt={company.name}
+                          className="company-logo"
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
                 {problem.hint && (
                   <div className="info-item">
                     <span className="info-label">Hint:</span>
-                    <span className="hint-text">💡 {problem.hint}</span>
+                    <span className="hint-text">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{marginRight: '6px'}}>
+                        <path d="M12,2A7,7 0 0,1 19,9C19,11.38 17.81,13.47 16,14.74V17A1,1 0 0,1 15,18H9A1,1 0 0,1 8,17V14.74C6.19,13.47 5,11.38 5,9A7,7 0 0,1 12,2M9,21V20H15V21A1,1 0 0,1 14,22H10A1,1 0 0,1 9,21M12,4A5,5 0 0,0 7,9C7,10.68 7.8,12.17 9,13.09V16H15V13.09C16.2,12.17 17,10.68 17,9A5,5 0 0,0 12,4Z"/>
+                      </svg>
+                      {problem.hint}
+                    </span>
                   </div>
                 )}
               </div>

@@ -13,6 +13,8 @@
   top: 0;
   z-index: 100;
   width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .header-content {
@@ -22,6 +24,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .header-logo-link {
@@ -43,21 +46,23 @@
   border: 1px solid #d1d5db;
   background-color: white;
   color: #374151;
-  border-radius: 12px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
   transition: all 0.2s;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .nav-button:hover {
   background-color: #f3f4f6;
+  border-color: #9ca3af;
 }
 
 .nav-button.active {
-  background-color: #3b82f6;
-  color: white;
-  border-color: #3b82f6;
+  background-color: #e5e7eb;
+  color: #374151;
+  border-color: #9ca3af;
 }
 
 .badge {
@@ -202,30 +207,58 @@
 
   .header-content {
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
     padding: 0 16px;
+  }
+
+  .header-logo-section {
+    width: 100%;
+    justify-content: center !important;
+  }
+
+  .logo-container {
+    padding: 12px 16px !important;
+  }
+
+  .back-to-sheet-btn {
+    display: none !important;
   }
 
   .header-nav {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    gap: 12px;
     width: 100%;
   }
 
   .nav-button {
-    padding: 10px 12px;
-    font-size: 12px;
+    padding: 12px 16px !important;
+    font-size: 13px !important;
     text-align: center;
+    border-radius: 12px !important;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: center !important;
+    gap: 16px !important;
+  }
+
+  .action-btn {
+    flex: 1;
+    justify-content: center !important;
+    padding: 12px 16px !important;
+    font-size: 13px !important;
   }
 
   .dsa-sheet-main {
-    padding: 12px;
+    padding: 16px 12px;
   }
 
   .overview-section {
-    padding: 16px;
-    margin-bottom: 16px;
+    padding: 20px 16px;
+    margin-bottom: 20px;
+    border-radius: 12px;
   }
 
   .main-title {
@@ -299,6 +332,22 @@
     margin-bottom: 8px;
   }
 
+  /* Timer column responsive */
+  .problem-list > div:not(:first-child) > div:nth-child(8) {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  /* Articles column responsive */
+  .problem-list > div:not(:first-child) > div:nth-child(9) {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
   .overview-section > div:last-child {
     flex-direction: column;
     gap: 8px;
@@ -344,6 +393,7 @@
 .dsa-sheet-container.dark .dsa-sheet-header {
   background-color: #111111;
   border-bottom-color: #333333;
+  z-index: 100;
 }
 
 .dsa-sheet-container.dark .nav-button {
@@ -357,7 +407,7 @@
 }
 
 .dsa-sheet-container.dark .nav-button.active {
-  background-color: #3b82f6;
+  background-color: #374151;
   color: white;
 }
 
@@ -401,24 +451,7 @@
   border-color: #333333;
 }
 
-.dsa-sheet-container.dark .problem-table-header {
-  background-color: #222222 !important;
-  border-bottom-color: #444444 !important;
-  color: #ffffff !important;
-}
 
-.dsa-sheet-container.dark .problem-row {
-  border-bottom-color: #333333 !important;
-}
-
-.dsa-sheet-container.dark .problem-info div {
-  color: #ffffff !important;
-  background-color: #000000 !important;
-}
-
-.dsa-sheet-container.dark .problem-info {
-  background-color: #000000 !important;
-}
 
 .dsa-sheet-container.dark input,
 .dsa-sheet-container.dark select,
@@ -453,7 +486,7 @@
 }
 
 .dsa-sheet-container.dark .problem-action a {
-  background-color: #1f2937 !important;
+  background-color: #000000 !important;
   color: #ffffff !important;
 }
 

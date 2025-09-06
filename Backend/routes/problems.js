@@ -1,6 +1,8 @@
 const express = require('express');
 const Problem = require('../models/Problem');
+const { auth } = require('../middleware/auth');
 const { getDailyProblems } = require('../services/dailyProblemsService');
+const { validateObjectId, sanitizeForLog } = require('../utils/sanitizer');
 
 const router = express.Router();
 
@@ -166,9 +168,14 @@ router.get('/topic/:topicId', async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', auth, async (req, res) => {
   try {
     const problemId = parseInt(req.params.id);
+    
+    if (!problemId || problemId < 1) {
+      return res.status(400).json({ error: 'Invalid problem ID' });
+    }
+    
     let foundProblem = null;
     
     for (const topic of dsaProblemsData) {
@@ -181,6 +188,7 @@ router.get('/:id', async (req, res) => {
     }
     res.json(foundProblem);
   } catch (error) {
+    console.error('Problem fetch error:', sanitizeForLog(error.message));
     res.status(500).json({ error: 'Server error' });
   }
 });

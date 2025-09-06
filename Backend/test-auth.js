@@ -1,37 +1,61 @@
-// Simple test script to verify authentication
-const { validateUserInput, validateLoginInput } = require('./utils/validation');
+const axios = require('axios');
 
-console.log('Testing Authentication Validation...\n');
+const BASE_URL = 'http://localhost:5001/api';
 
-// Test valid user
-console.log('1. Testing valid user:');
-const validUser = validateUserInput('John Doe', 'john.doe@gmail.com', 'password123');
-console.log('Valid user result:', validUser);
+async function testAuth() {
+  console.log('🧪 Testing Auth System...\n');
+  
+  try {
+    // Test server health
+    console.log('1. Testing server health...');
+    const health = await axios.get(`${BASE_URL}/health`);
+    console.log('✅ Server is running:', health.data);
+    
+    // Test auth routes
+    console.log('\n2. Testing auth routes...');
+    const authTest = await axios.get(`${BASE_URL}/auth/test`);
+    console.log('✅ Auth routes working:', authTest.data);
+    
+    // Test simple register
+    console.log('\n3. Testing simple register...');
+    const testUser = {
+      name: 'Test User',
+      email: 'test@example.com',
+      password: 'password123'
+    };
+    
+    try {
+      const register = await axios.post(`${BASE_URL}/auth/simple-register`, testUser);
+      console.log('✅ Registration successful:', register.data);
+      
+      // Test simple login
+      console.log('\n4. Testing simple login...');
+      const login = await axios.post(`${BASE_URL}/auth/simple-login`, {
+        email: testUser.email,
+        password: testUser.password
+      });
+      console.log('✅ Login successful:', login.data);
+      
+    } catch (regError) {
+      if (regError.response?.data?.error === 'User already exists') {
+        console.log('ℹ️ User already exists, testing login...');
+        
+        const login = await axios.post(`${BASE_URL}/auth/simple-login`, {
+          email: testUser.email,
+          password: testUser.password
+        });
+        console.log('✅ Login successful:', login.data);
+      } else {
+        throw regError;
+      }
+    }
+    
+    console.log('\n🎉 All auth tests passed!');
+    
+  } catch (error) {
+    console.error('❌ Test failed:', error.response?.data || error.message);
+  }
+}
 
-// Test dummy entries
-console.log('\n2. Testing dummy entries:');
-const dummyUser1 = validateUserInput('test', 'test@test.com', '123456');
-console.log('Dummy user 1 result:', dummyUser1);
-
-const dummyUser2 = validateUserInput('fake', 'fake@fake.com', 'password');
-console.log('Dummy user 2 result:', dummyUser2);
-
-// Test invalid email
-console.log('\n3. Testing invalid email:');
-const invalidEmail = validateUserInput('John Doe', 'invalid-email', 'password123');
-console.log('Invalid email result:', invalidEmail);
-
-// Test short name
-console.log('\n4. Testing short name:');
-const shortName = validateUserInput('A', 'john@gmail.com', 'password123');
-console.log('Short name result:', shortName);
-
-// Test login validation
-console.log('\n5. Testing login validation:');
-const validLogin = validateLoginInput('john@gmail.com', 'password123');
-console.log('Valid login result:', validLogin);
-
-const invalidLogin = validateLoginInput('invalid-email', '');
-console.log('Invalid login result:', invalidLogin);
-
-console.log('\nAuthentication validation tests completed!');
+// Run tests
+testAuth();

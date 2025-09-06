@@ -18,7 +18,7 @@ function Signup() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
-  const { toggleTheme } = useTheme();
+  const { isDark, toggleTheme } = useTheme();
 
   useEffect(() => {
     if (document.querySelector('script[src="https://accounts.google.com/gsi/client"]')) {
@@ -181,20 +181,36 @@ function Signup() {
     <div className="signup-container">
       <div className="signup-card">
         <div className="signup-header">
-          <img
-            src="/logo.png"
-            alt="Logo"
-            className="signup-logo"
-          />
+          <div className="signup-logo-container" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+            <img
+              src={isDark ? "/dark.png" : "/light.png"}
+              alt="DSA Sheet - Apna College"
+              className="signup-logo"
+              style={{
+                height: '60px',
+                width: 'auto',
+                objectFit: 'contain'
+              }}
+            />
+          </div>
           <h1 className="signup-title">
             <span className="signup-title-highlight">DSA</span> Sheet
           </h1>
-          <p className="signup-subtitle">Create your account</p>
+          <p className="signup-subtitle">Create your account and start your coding journey</p>
           <button 
             onClick={toggleTheme}
             className="dark-mode-toggle"
+            style={{
+              background: 'none',
+              border: 'none',
+              fontSize: '24px',
+              cursor: 'pointer',
+              padding: '8px',
+              borderRadius: '50%',
+              transition: 'background-color 0.2s ease'
+            }}
           >
-            🌙
+            {isDark ? '☀️' : '🌙'}
           </button>
         </div>
         

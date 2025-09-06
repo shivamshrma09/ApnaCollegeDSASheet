@@ -26,6 +26,7 @@
     margin: 0 auto 12px auto;
     height: 48px;
     border-radius: 6px;
+    transform: scale(3);
 }
 
 .login-title {
