@@ -1,15 +1,12 @@
 {
   "name": "dsa-sheet-frontend",
-  "scripts": {
-    "build": "vite build",
-    "vercel-build": "vite build"
-  },
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "vercel-build": "vite build",
     "generate-sitemap": "node scripts/generate-sitemap.js",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
