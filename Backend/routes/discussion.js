@@ -160,51 +160,27 @@ Be encouraging and educational without giving the complete solution.`;
     } catch (apiError) {
       console.error('Gemini API error:', apiError);
       
-      // Smart fallback responses based on problem title and user question
+      // Smart fallback responses
       const questionLower = question.toLowerCase();
       const titleLower = problemTitle.toLowerCase();
       
-      let aiResponse;
-      
       if (questionLower.includes('hi') || questionLower.includes('hello') || questionLower.length < 10) {
-        aiResponse = `Hello! 👋 I'm here to help with "${problemTitle}". What specific aspect would you like to discuss? Feel free to ask about:
-• Algorithm approach
-• Time/Space complexity
-• Edge cases
-• Implementation hints`;
+        aiResponse = `Hello! I'm here to help with "${problemTitle}". What specific aspect would you like to discuss?`;
       } else if (titleLower.includes('reverse') && titleLower.includes('array')) {
         if (questionLower.includes('complexity') || questionLower.includes('optimize')) {
-          aiResponse = `For reversing an array:
-• Two-pointer approach: O(n) time, O(1) space
-• Built-in reverse(): O(n) time, O(1) space
-• Creating new array: O(n) time, O(n) space
-
-The two-pointer method is most optimal! 🚀`;
+          aiResponse = `For reversing an array: Two-pointer approach is O(n) time, O(1) space - most optimal!`;
         } else {
-          aiResponse = `Great question about array reversal! 🔄
-
-Key approaches:
-1. **Two pointers**: Start from both ends, swap elements
-2. **Built-in method**: Use language's reverse function
-3. **Recursion**: Reverse by swapping first/last recursively
-
-Which approach interests you most?`;
+          aiResponse = `Great question about array reversal! Key approaches: 1. Two pointers 2. Built-in method 3. Recursion. Which interests you most?`;
         }
       } else if (questionLower.includes('complexity')) {
-        aiResponse = `Time complexity analysis is crucial! ⏱️
-
-For "${problemTitle}":
-• Consider the number of operations
-• Look for nested loops (O(n²))
-• Single pass solutions are often O(n)
-• Can you solve it in one pass?`;
+        aiResponse = `Time complexity analysis is crucial! For "${problemTitle}": Consider operations, nested loops, and single-pass solutions.`;
       } else {
-        const contextualResponses = [
-          `Interesting question about "${problemTitle}"! 🤔 Let's break it down step by step. What's your current understanding?`,
-          `Good thinking! For this problem, consider the constraints and edge cases. What approach are you considering?`,
-          `That's a great question! 💡 Have you tried working through a small example first?`
+        const responses = [
+          `Interesting question about "${problemTitle}"! Let's break it down step by step.`,
+          `Good thinking! Consider the constraints and edge cases for this problem.`,
+          `Great question! Have you tried working through a small example first?`
         ];
-        aiResponse = contextualResponses[Math.floor(Math.random() * contextualResponses.length)];
+        aiResponse = responses[Math.floor(Math.random() * responses.length)];
       }
     }
     
@@ -292,6 +268,24 @@ router.get('/recent', async (req, res) => {
 router.use('/uploads', express.static('uploads'));
 
 module.exports = router;
+    
+    // Emit upvote update
+    const io = req.app.get('io');
+    io.to(`problem_${message.problemId}`).emit('messageUpvoted', {
+      messageId,
+      upvotes: message.upvotes,
+      hasUpvoted: !hasUpvoted
+    });
+    
+    res.json({ upvotes: message.upvotes, hasUpvoted: !hasUpvoted });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Get recent chat history
+router.get('/recent', async (req, res) => {
+  res.json([]);
 });
 
 // Serve uploaded files
