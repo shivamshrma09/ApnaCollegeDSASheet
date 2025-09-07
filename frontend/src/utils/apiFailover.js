@@ -48,13 +48,13 @@ class APIFailoverManager {
 
   getAPIKey(apiUrl) {
     if (apiUrl.includes('openai')) {
-      return process.env.REACT_APP_OPENAI_API_KEY || 'fallback-key';
+      return import.meta.env.VITE_OPENAI_API_KEY || import.meta.env.REACT_APP_OPENAI_API_KEY || 'fallback-key';
     } else if (apiUrl.includes('anthropic')) {
-      return process.env.REACT_APP_ANTHROPIC_API_KEY || 'fallback-key';
+      return import.meta.env.VITE_ANTHROPIC_API_KEY || import.meta.env.REACT_APP_ANTHROPIC_API_KEY || 'fallback-key';
     } else if (apiUrl.includes('cohere')) {
-      return process.env.REACT_APP_COHERE_API_KEY || 'fallback-key';
+      return import.meta.env.VITE_COHERE_API_KEY || import.meta.env.REACT_APP_COHERE_API_KEY || 'fallback-key';
     } else if (apiUrl.includes('together')) {
-      return process.env.REACT_APP_TOGETHER_API_KEY || 'fallback-key';
+      return import.meta.env.VITE_TOGETHER_API_KEY || import.meta.env.REACT_APP_TOGETHER_API_KEY || 'fallback-key';
     }
     return 'fallback-key';
   }

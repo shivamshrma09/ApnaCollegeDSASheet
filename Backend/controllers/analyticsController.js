@@ -1,6 +1,5 @@
 const UserAnalytics = require('../models/UserAnalytics');
 
-// Track problem attempt
 const trackProblemAttempt = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -11,7 +10,6 @@ const trackProblemAttempt = async (req, res) => {
       analytics = new UserAnalytics({ userId, problemAttempts: [], weakAreas: [], studySession: [] });
     }
     
-    // Add problem attempt
     const existingAttempt = analytics.problemAttempts.find(p => p.problemId === problemId);
     if (existingAttempt) {
       existingAttempt.attempts += 1;
@@ -31,7 +29,6 @@ const trackProblemAttempt = async (req, res) => {
       });
     }
     
-    // Update performance metrics
     if (solved) {
       analytics.performance.totalSolved += 1;
       if (difficulty === 'Easy') analytics.performance.easySolved += 1;
@@ -39,7 +36,6 @@ const trackProblemAttempt = async (req, res) => {
       else if (difficulty === 'Hard') analytics.performance.hardSolved += 1;
     }
     
-    // Update weak areas
     await updateWeakAreas(analytics, topic, difficulty, solved, timeSpent);
     
     analytics.performance.lastActive = new Date();
@@ -51,7 +47,6 @@ const trackProblemAttempt = async (req, res) => {
   }
 };
 
-// Update weak areas based on performance
 const updateWeakAreas = async (analytics, topic, difficulty, solved, timeSpent) => {
   const weakArea = analytics.weakAreas.find(w => w.topic === topic && w.difficulty === difficulty);
   
@@ -72,7 +67,6 @@ const updateWeakAreas = async (analytics, topic, difficulty, solved, timeSpent) 
   }
 };
 
-// Get user analytics
 const getUserAnalytics = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -86,14 +80,12 @@ const getUserAnalytics = async (req, res) => {
       });
     }
     
-    // Get recent activity (last 7 days)
     const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
     const recentActivity = analytics.problemAttempts
       .filter(p => p.timestamp >= weekAgo)
       .sort((a, b) => b.timestamp - a.timestamp)
       .slice(0, 20);
     
-    // Calculate accuracy
     const totalAttempts = analytics.problemAttempts.length;
     const solvedCount = analytics.problemAttempts.filter(p => p.solved).length;
     const accuracy = totalAttempts > 0 ? (solvedCount / totalAttempts) * 100 : 0;
@@ -112,7 +104,6 @@ const getUserAnalytics = async (req, res) => {
   }
 };
 
-// Analyze study patterns
 const getStudyPattern = (attempts) => {
   const last30Days = attempts.filter(p => 
     p.timestamp >= new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
@@ -140,7 +131,6 @@ const getStudyPattern = (attempts) => {
   };
 };
 
-// Set interview preparation goals
 const setInterviewGoals = async (req, res) => {
   try {
     const { userId } = req.params;

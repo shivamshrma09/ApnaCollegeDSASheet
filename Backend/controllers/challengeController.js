@@ -1,7 +1,6 @@
 const Challenge = require('../models/Challenge');
 const { analyzeChallengeAnswer } = require('../services/geminiService');
 
-// Create new challenge
 const createChallenge = async (req, res) => {
   try {
     const { title, description, duration } = req.body;
@@ -12,21 +11,19 @@ const createChallenge = async (req, res) => {
       title,
       description,
       creator,
-      duration: duration || 1, // Default 1 minute for testing
+      duration: duration || 1,
       startTime: now
     });
 
     await challenge.save();
     await challenge.populate('creator', 'name email');
 
-    // Calculate time remaining for immediate response
     const timeRemaining = Math.max(0, challenge.endTime - now);
 
-    // Emit to all connected users with timer info
     const io = req.app.get('io');
     io.emit('newChallenge', {
       ...challenge.toObject(),
-      timeRemaining: Math.floor(timeRemaining / 1000), // in seconds
+      timeRemaining: Math.floor(timeRemaining / 1000), 
       isExpired: timeRemaining <= 0
     });
 
@@ -40,7 +37,6 @@ const createChallenge = async (req, res) => {
   }
 };
 
-// Get active challenges
 const getActiveChallenges = async (req, res) => {
   try {
     const challenges = await Challenge.find({
@@ -51,7 +47,6 @@ const getActiveChallenges = async (req, res) => {
     .populate('participants.user', 'name email')
     .sort({ createdAt: -1 });
 
-    // Update submission status for expired challenges
     for (let challenge of challenges) {
       await challenge.checkAndCloseSubmissions();
     }
@@ -62,7 +57,6 @@ const getActiveChallenges = async (req, res) => {
   }
 };
 
-// Join challenge
 const joinChallenge = async (req, res) => {
   try {
     const { challengeId } = req.params;
@@ -74,12 +68,10 @@ const joinChallenge = async (req, res) => {
       return res.status(404).json({ error: 'Challenge not found' });
     }
 
-    // Check if challenge is still active
     if (new Date() > challenge.endTime) {
       return res.status(400).json({ error: 'Challenge has ended' });
     }
 
-    // Check if user already joined
     const existingParticipant = challenge.participants.find(
       p => p.user.toString() === userId.toString()
     );
@@ -96,7 +88,6 @@ const joinChallenge = async (req, res) => {
     await challenge.save();
     await challenge.populate('participants.user', 'name email');
 
-    // Emit to challenge room
     const io = req.app.get('io');
     io.to(`challenge_${challengeId}`).emit('userJoined', {
       challengeId,
@@ -110,7 +101,6 @@ const joinChallenge = async (req, res) => {
   }
 };
 
-// Submit answer
 const submitAnswer = async (req, res) => {
   try {
     const { challengeId } = req.params;
@@ -123,12 +113,10 @@ const submitAnswer = async (req, res) => {
       return res.status(404).json({ error: 'Challenge not found' });
     }
 
-    // Check if submissions are still open
     if (!challenge.isSubmissionOpen || new Date() > challenge.endTime) {
       return res.status(400).json({ error: 'Submission time has ended' });
     }
 
-    // Find participant
     const participantIndex = challenge.participants.findIndex(
       p => p.user.toString() === userId.toString()
     );
@@ -137,13 +125,11 @@ const submitAnswer = async (req, res) => {
       return res.status(400).json({ error: 'You must join the challenge first' });
     }
 
-    // Update participant's answer
     challenge.participants[participantIndex].answer = answer;
     challenge.participants[participantIndex].submittedAt = new Date();
 
     await challenge.save();
 
-    // Start AI analysis in background
     analyzeAnswerAsync(challengeId, userId, answer, challenge.title, challenge.description);
 
     res.json({ message: 'Answer submitted successfully' });
@@ -152,7 +138,6 @@ const submitAnswer = async (req, res) => {
   }
 };
 
-// Get challenge details with timer
 const getChallengeDetails = async (req, res) => {
   try {
     const { challengeId } = req.params;
@@ -165,7 +150,6 @@ const getChallengeDetails = async (req, res) => {
       return res.status(404).json({ error: 'Challenge not found' });
     }
 
-    // Update submission status
     await challenge.checkAndCloseSubmissions();
 
     const now = new Date();

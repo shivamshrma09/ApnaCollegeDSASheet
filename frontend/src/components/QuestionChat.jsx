@@ -4,7 +4,7 @@ import axios from 'axios';
 import io from 'socket.io-client';
 import './QuestionChat.css';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}/api`;
+import { API_BASE_URL, SOCKET_URL } from '../config/constants';
 
 const QuestionChat = ({ problem, isOpen, onClose }) => {
   const [messages, setMessages] = useState([]);
@@ -38,7 +38,7 @@ const QuestionChat = ({ problem, isOpen, onClose }) => {
   }, [messages]);
 
   const initSocket = () => {
-    const newSocket = io(import.meta.env.VITE_SOCKET_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}`);
+    const newSocket = io(SOCKET_URL);
     
     newSocket.on(`problemChat_${problem.id}`, (data) => {
       if (data.type === 'newMessage') {

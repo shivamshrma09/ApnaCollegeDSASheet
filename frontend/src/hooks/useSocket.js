@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 import { sanitizeForLog } from '../utils/sanitizer';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}`;
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 
 export const useSocket = (currentRoom, isDMMode, selectedDMUser, getCurrentUser) => {
   const [socket, setSocket] = useState(null);

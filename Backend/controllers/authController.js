@@ -13,7 +13,6 @@ const googleAuth = async (req, res) => {
       return res.status(400).json({ error: 'Google token is required' });
     }
     
-    // Verify Google token
     let ticket;
     try {
       ticket = await client.verifyIdToken({
@@ -32,11 +31,9 @@ const googleAuth = async (req, res) => {
       return res.status(400).json({ error: 'Invalid Google account data' });
     }
     
-    // Check if user exists
     let user = await User.findOne({ email: email.toLowerCase() });
     
     if (!user) {
-      // Create new user
       user = new User({
         name,
         email: email.toLowerCase(),
@@ -47,7 +44,6 @@ const googleAuth = async (req, res) => {
       await user.save();
       console.log('✅ New Google user created:', email);
     } else {
-      // Update existing user's info
       if (picture && picture !== user.avatar) {
         user.avatar = picture;
         await user.save();
@@ -76,11 +72,9 @@ const quickGoogleAuth = async (req, res) => {
   try {
     const { name, email, avatar } = req.body;
     
-    // Check if user exists
     let user = await User.findOne({ email });
     
     if (!user) {
-      // Create new user
       user = new User({
         name,
         email,
@@ -90,7 +84,6 @@ const quickGoogleAuth = async (req, res) => {
       });
       await user.save();
     } else {
-      // Update existing user's avatar if provided
       if (avatar) {
         user.avatar = avatar;
         await user.save();
@@ -114,7 +107,6 @@ const quickGoogleAuth = async (req, res) => {
   }
 };
 
-// Get user profile
 const getUserProfile = async (req, res) => {
   try {
     const user = req.user;

@@ -20,9 +20,7 @@ export const SocketProvider = ({ children }) => {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    const newSocket = io(process.env.NODE_ENV === 'production' 
-      ? import.meta.env.VITE_SOCKET_URL || 'https://your-backend-url.com' 
-      : import.meta.env.VITE_SOCKET_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}`, {
+    const newSocket = io(import.meta.env.VITE_SOCKET_URL, {
       withCredentials: true,
       transports: ['websocket', 'polling'],
       auth: {
