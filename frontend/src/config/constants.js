@@ -1,6 +1,6 @@
 // Configuration constants
-export const API_BASE_URL = import.meta.env.VITE_API_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}/api`;
-export const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}`;
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://plusdsa.onrender.com/api';
+export const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'https://plusdsa.onrender.com';
 
 // Gemini API Keys from environment variables
 export const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
