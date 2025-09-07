@@ -286,6 +286,13 @@ router.post('/upvote/:messageId', auth, async (req, res) => {
 // Get recent chat history
 router.get('/recent', async (req, res) => {
   try {
+    // Check if Discussion model exists and has data
+    const discussionCount = await Discussion.countDocuments();
+    
+    if (discussionCount === 0) {
+      return res.json([]);
+    }
+    
     const recentChats = await Discussion.aggregate([
       {
         $group: {
@@ -315,7 +322,8 @@ router.get('/recent', async (req, res) => {
     res.json(recentChats);
   } catch (error) {
     console.error('Error fetching recent chats:', error);
-    res.status(500).json({ message: error.message });
+    // Return empty array instead of error to prevent frontend crashes
+    res.json([]);
   }
 });
 
