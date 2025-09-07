@@ -285,13 +285,13 @@ router.post('/upvote/:messageId', auth, async (req, res) => {
 
 // Get recent chat history
 router.get('/recent', async (req, res) => {
-  try {
-    // Always return empty array to prevent errors
-    res.json([]);
-  } catch (error) {
-    console.error('Error fetching recent chats:', error);
-    res.json([]);
-  }
+  res.json([]);
+});
+
+// Serve uploaded files
+router.use('/uploads', express.static('uploads'));
+
+module.exports = router;
 });
 
 // Serve uploaded files
