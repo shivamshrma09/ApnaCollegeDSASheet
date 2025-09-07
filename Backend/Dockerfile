@@ -1,6 +1,9 @@
 # Use Node.js 18 Alpine for smaller image size
 FROM node:18-alpine
 
+# Install build dependencies for canvas
+RUN apk add --no-cache python3 make g++ cairo-dev jpeg-dev pango-dev giflib-dev
+
 # Set working directory
 WORKDIR /app
 
