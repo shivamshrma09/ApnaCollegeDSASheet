@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ 
   storage: storage,
-  limits: { fileSize: 8 * 1024 * 1024 }, // 8MB limit (recommended)
+  limits: { fileSize: 8 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|gif|pdf|doc|docx|txt/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
@@ -41,7 +41,6 @@ router.get('/:problemId', async (req, res) => {
   try {
     const { problemId } = req.params;
     
-    // Validate problemId is a valid number
     const parsedProblemId = parseInt(problemId);
     if (isNaN(parsedProblemId)) {
       return res.status(400).json({ message: 'Invalid problem ID' });
@@ -69,7 +68,6 @@ router.post('/send', async (req, res) => {
       return res.status(400).json({ message: 'Missing required fields' });
     }
     
-    // Validate problemId is a valid number
     const parsedProblemId = parseInt(problemId);
     if (isNaN(parsedProblemId)) {
       return res.status(400).json({ message: 'Invalid problem ID' });
@@ -90,7 +88,6 @@ router.post('/send', async (req, res) => {
       await message.populate('replyTo');
     }
     
-    // Emit to all users in the problem room
     try {
       const io = req.app.get('io');
       if (io) {
@@ -107,48 +104,51 @@ router.post('/send', async (req, res) => {
   }
 });
 
-// AI Reply using Gemini API
-router.post('/ai-reply', auth, async (req, res) => {
+// Upvote a message
+router.post('/upvote/:messageId', auth, async (req, res) => {
   try {
-    const { problemId, question, problemTitle, isPrivate } = req.body;
+    const { messageId } = req.params;
     const userId = req.user.id;
     
-    // Use Gemini API with provided key
-    const API_KEY = 'AIzaSyARyEuGB_5kXWcxe8AfqTr50GFd2p8VVtM';
+    const message = await Discussion.findById(messageId);
+    if (!message) {
+      return res.status(404).json({ message: 'Message not found' });
+    }
     
-    const prompt = `You are a helpful DSA coding assistant. Problem: "${problemTitle}"
-User question: "${question}"
-
-Provide a concise, helpful response (max 150 words) focusing on:
-- Algorithm hints
-- Approach suggestions
-- Common pitfalls
-- Time/space complexity tips
-
-Be encouraging and educational without giving the complete solution.`;
+    const hasUpvoted = message.upvotedBy.includes(userId);
     
-    let aiResponse;
-    try {
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: prompt
-            }]
-          }],
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 200
-          }
-        })
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
+    if (hasUpvoted) {
+      message.upvotes -= 1;
+      message.upvotedBy = message.upvotedBy.filter(id => id !== userId);
+    } else {
+      message.upvotes += 1;
+      message.upvotedBy.push(userId);
+    }
+    
+    await message.save();
+    
+    const io = req.app.get('io');
+    io.to(`problem_${message.problemId}`).emit('messageUpvoted', {
+      messageId,
+      upvotes: message.upvotes,
+      hasUpvoted: !hasUpvoted
+    });
+    
+    res.json({ upvotes: message.upvotes, hasUpvoted: !hasUpvoted });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Get recent chat history
+router.get('/recent', async (req, res) => {
+  res.json([]);
+});
+
+// Serve uploaded files
+router.use('/uploads', express.static('uploads'));
+
+module.exports = router;
         if (data.candidates && data.candidates[0] && data.candidates[0].content) {
           aiResponse = data.candidates[0].content.parts[0].text;
         } else {
@@ -224,28 +224,6 @@ router.post('/upvote/:messageId', auth, async (req, res) => {
     await message.save();
     
     // Emit upvote update
-    const io = req.app.get('io');
-    io.to(`problem_${message.problemId}`).emit('messageUpvoted', {
-      messageId,
-      upvotes: message.upvotes,
-      hasUpvoted: !hasUpvoted
-    });
-    
-    res.json({ upvotes: message.upvotes, hasUpvoted: !hasUpvoted });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-// Get recent chat history
-router.get('/recent', async (req, res) => {
-  res.json([]);
-});
-
-// Serve uploaded files
-router.use('/uploads', express.static('uploads'));
-
-module.exports = router;
     const io = req.app.get('io');
     io.to(`problem_${message.problemId}`).emit('messageUpvoted', {
       messageId,
