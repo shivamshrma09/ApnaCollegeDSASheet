@@ -6,10 +6,9 @@ export default defineConfig(({ mode }) => ({
   base: mode === 'production' ? '/' : '/',
   plugins: [react()],
   define: {
-    'import.meta.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL || `http://localhost:${process.env.VITE_PORT || 5001}/api`),
-    'import.meta.env.VITE_SOCKET_URL': JSON.stringify(process.env.VITE_SOCKET_URL || `http://localhost:${process.env.VITE_PORT || 5001}`),
+    'import.meta.env.VITE_API_URL': JSON.stringify(process.env.VITE_API_URL || 'https://plusdsa.onrender.com/api'),
+    'import.meta.env.VITE_SOCKET_URL': JSON.stringify(process.env.VITE_SOCKET_URL || 'https://plusdsa.onrender.com'),
     'import.meta.env.VITE_GOOGLE_CLIENT_ID': JSON.stringify(process.env.VITE_GOOGLE_CLIENT_ID),
-    'import.meta.env.VITE_PORT': JSON.stringify(process.env.VITE_PORT || 5001),
     global: 'globalThis'
   },
   build: {
@@ -37,4 +36,5 @@ export default defineConfig(({ mode }) => ({
   preview: {
     historyApiFallback: true
   }
+}))
 }))
