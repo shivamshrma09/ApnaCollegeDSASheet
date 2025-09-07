@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const API_BASE = 'http://localhost:5001/api';
+const API_BASE = 'https://plusdsa.onrender.com/api';
 const TEST_USER_ID = '68ba7187488b0b8b3f463c04';
 
 async function debugFlow() {

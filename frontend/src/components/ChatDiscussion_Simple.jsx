@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 
-const API_BASE_URL = 'http://localhost:5001/api';
-const SOCKET_URL = 'http://localhost:5001';
+const API_BASE_URL = 'https://plusdsa.onrender.com/api';
+const SOCKET_URL = 'https://plusdsa.onrender.com';
 
 // SVG Icon Components
 const SendIcon = () => (

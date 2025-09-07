@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useTheme } from '../contexts/ThemeContext';
 import UniversalProgressDashboard from './UniversalProgressDashboard';
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = 'https://plusdsa.onrender.com/api';
 
 const ProgressOverview = ({ userId, currentSheetType, onSheetChange }) => {
   const [apnaCollegeProgress, setApnaCollegeProgress] = useState({ completedProblems: [], starredProblems: [], notes: {}, playlists: [] });

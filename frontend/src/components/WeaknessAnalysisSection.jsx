@@ -14,7 +14,7 @@ const WeaknessAnalysisSection = ({ isDark, userId, selectedSheet, completedProbl
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const response = await fetch(`http://localhost:5001/api/analysis/analysis-history/${selectedSheet}`, {
+      const response = await fetch(`https://plusdsa.onrender.com/api/analysis/analysis-history/${selectedSheet}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
@@ -211,7 +211,7 @@ const WeaknessAnalysisSection = ({ isDark, userId, selectedSheet, completedProbl
       await savePerformanceData(data.userStats, data.sheetType);
       
       // Get real AI analysis from Gemini
-      const response = await fetch('http://localhost:5001/api/analysis/weakness', {
+      const response = await fetch('https://plusdsa.onrender.com/api/analysis/weakness', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -246,7 +246,7 @@ const WeaknessAnalysisSection = ({ isDark, userId, selectedSheet, completedProbl
       Object.keys(userStats.timeSpent).forEach(problemId => {
         if (userStats.timeSpent[problemId] > 0) {
           promises.push(
-            fetch('http://localhost:5001/api/analysis/save-performance', {
+            fetch('https://plusdsa.onrender.com/api/analysis/save-performance', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -279,7 +279,7 @@ const WeaknessAnalysisSection = ({ isDark, userId, selectedSheet, completedProbl
       }
       
       console.log(`Fetching performance data for sheet: ${sheetType}`);
-      const response = await fetch(`http://localhost:5001/api/analysis/performance/${sheetType}`, {
+      const response = await fetch(`https://plusdsa.onrender.com/api/analysis/performance/${sheetType}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

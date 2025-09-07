@@ -20,7 +20,7 @@ export const SocketProvider = ({ children }) => {
     const token = localStorage.getItem('token');
     if (!token) return;
 
-    const newSocket = io(import.meta.env.VITE_SOCKET_URL, {
+    const newSocket = io(import.meta.env.VITE_SOCKET_URL || 'https://plusdsa.onrender.com', {
       withCredentials: true,
       transports: ['websocket', 'polling'],
       auth: {

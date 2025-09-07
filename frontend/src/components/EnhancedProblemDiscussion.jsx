@@ -3,7 +3,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}/api`;
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://plusdsa.onrender.com/api';
 
 const getAuthHeaders = async () => {
   const token = sessionStorage.getItem('token');
@@ -36,7 +36,7 @@ const EnhancedProblemDiscussion = ({ isOpen, onClose, problem, userId }) => {
       fetchRecentChats(); // Auto-load recent chats
       
       const token = sessionStorage.getItem('token');
-      const newSocket = io(import.meta.env.VITE_SOCKET_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}`, { auth: { token } });
+      const newSocket = io(import.meta.env.VITE_SOCKET_URL || 'https://plusdsa.onrender.com', { auth: { token } });
       setSocket(newSocket);
       
       newSocket.emit('joinProblem', problem.id);

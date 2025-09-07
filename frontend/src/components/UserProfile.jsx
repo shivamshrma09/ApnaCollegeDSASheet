@@ -4,7 +4,7 @@ import { useUserProgress } from '../hooks/useUserProgress';
 import { useForgettingCurve } from '../hooks/useForgettingCurve';
 // Custom Spaced Repetition Hook
 const useCustomSpacedRepetition = (userId, sheetType = 'apnaCollege') => {
-  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+  const API_BASE = import.meta.env.VITE_API_URL || 'https://plusdsa.onrender.com/api';
   
   const addToSpacedRepetition = async (problemId) => {
     try {
@@ -34,7 +34,7 @@ import UniversalProgressDashboard from './UniversalProgressDashboard';
 
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://plusdsa.onrender.com/api';
 
 const UserProfile = ({ isOpen, onClose, userId }) => {
   const { isDark } = useTheme();
@@ -1626,7 +1626,7 @@ const UserProfile = ({ isOpen, onClose, userId }) => {
 // Custom Spaced Repetition Checkbox Component
 const CustomSpacedRepetitionCheckbox = ({ problemId, userId, sheetType = 'apnaCollege', onUpdate }) => {
   console.log(`📝 CustomSpacedRepetitionCheckbox rendered for problem ${problemId} in sheet ${sheetType}`);
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://plusdsa.onrender.com/api';
   const [isChecked, setIsChecked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
@@ -4466,10 +4466,10 @@ const GoalSettingSection = ({ isDark, userId, selectedSheet }) => {
       if (!token) return;
       
       const [goalsResponse, statsResponse] = await Promise.all([
-        fetch('http://localhost:5001/api/goals', {
+        fetch('https://plusdsa.onrender.com/api/goals', {
           headers: { 'Authorization': `Bearer ${token}` }
         }).catch(() => ({ ok: false })),
-        fetch(`http://localhost:5001/api/progress/${userId}/stats?sheetType=${selectedSheet}`, {
+        fetch(`https://plusdsa.onrender.com/api/progress/${userId}/stats?sheetType=${selectedSheet}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         }).catch(() => ({ ok: false }))
       ]);
@@ -4501,7 +4501,7 @@ const GoalSettingSection = ({ isDark, userId, selectedSheet }) => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5001/api/goals/set', {
+      const response = await fetch('https://plusdsa.onrender.com/api/goals/set', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

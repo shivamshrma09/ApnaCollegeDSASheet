@@ -31,7 +31,7 @@ import './DSASheet.css';
 
 // Import test utilities for debugging
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://plusdsa.onrender.com';
 
 
 
@@ -192,7 +192,7 @@ const DSASheet = ({ sheetType = 'apnaCollege', onSheetChange }) => {
           const userId = (userStr && userStr !== 'undefined' ? JSON.parse(userStr).id : null) || '68ba7187488b0b8b3f463c04';
           console.log(`🔄 Adding problem ${problemId} to custom spaced repetition for sheet: ${sheetType}`);
           
-          const response = await fetch(`http://localhost:5001/api/custom-spaced-repetition/add-solved?sheetType=${sheetType}`, {
+          const response = await fetch(`https://plusdsa.onrender.com/api/custom-spaced-repetition/add-solved?sheetType=${sheetType}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -2903,7 +2903,7 @@ const TestModal = ({ problemId, userId, onClose, onComplete, isDark, problems })
   
   const submitTest = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/test/submit', {
+      const response = await fetch('https://plusdsa.onrender.com/api/test/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

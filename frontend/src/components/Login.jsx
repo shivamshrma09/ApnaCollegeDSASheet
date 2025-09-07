@@ -85,7 +85,7 @@ export default function Login() {
       const clientId = 'Ov23liJ2EJqT6I1U83AK'; // Real GitHub Client ID
       const redirectUri = encodeURIComponent(
         window.location.hostname === 'localhost' 
-          ? 'http://localhost:5173/auth/github/callback'
+          ? 'https://plusdsa-app.netlify.app/auth/github/callback'
           : 'https://plusdsa.vercel.app/auth/github/callback'
       );
       const scope = 'user:email';

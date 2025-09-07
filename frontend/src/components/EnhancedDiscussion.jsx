@@ -4,7 +4,7 @@ import axios from 'axios';
 import io from 'socket.io-client';
 import { getAuthHeaders } from '../utils/csrfToken';
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = 'https://plusdsa.onrender.com/api';
 
 const EnhancedDiscussion = ({ isOpen, onClose, problem, userId }) => {
   const { isDark } = useTheme();
@@ -28,7 +28,7 @@ const EnhancedDiscussion = ({ isOpen, onClose, problem, userId }) => {
       fetchMessages();
       
       const token = localStorage.getItem('token');
-      const newSocket = io('http://localhost:5001', {
+      const newSocket = io('https://plusdsa.onrender.com', {
         auth: { token }
       });
       setSocket(newSocket);

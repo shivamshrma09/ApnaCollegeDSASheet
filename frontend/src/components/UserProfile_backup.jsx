@@ -32,7 +32,7 @@ import GoalSettingSection from './GoalSettingSection';
 
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = 'https://plusdsa.onrender.com/api';
 
 const UserProfile = ({ isOpen, onClose, userId }) => {
   const { isDark } = useTheme();
@@ -74,7 +74,7 @@ const UserProfile = ({ isOpen, onClose, userId }) => {
       try {
         const token = localStorage.getItem('token');
         if (token) {
-          const response = await fetch('http://localhost:5001/api/auth/me', {
+          const response = await fetch('https://plusdsa.onrender.com/api/auth/me', {
             headers: {
               'Authorization': `Bearer ${token}`
             }
@@ -1660,7 +1660,7 @@ const TestModal = ({ problemId, userId, onClose, onComplete, isDark }) => {
   const generateQuestions = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5001/api/test/generate', {
+      const response = await fetch('https://plusdsa.onrender.com/api/test/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1694,7 +1694,7 @@ const TestModal = ({ problemId, userId, onClose, onComplete, isDark }) => {
   
   const submitTest = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/test/submit', {
+      const response = await fetch('https://plusdsa.onrender.com/api/test/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -4252,10 +4252,10 @@ const GoalSettingSection = ({ isDark, userId, selectedSheet }) => {
       if (!token) return;
       
       const [goalsResponse, statsResponse] = await Promise.all([
-        fetch('http://localhost:5001/api/goals', {
+        fetch('https://plusdsa.onrender.com/api/goals', {
           headers: { 'Authorization': `Bearer ${token}` }
         }).catch(() => ({ ok: false })),
-        fetch(`http://localhost:5001/api/progress/${userId}/stats?sheetType=${selectedSheet}`, {
+        fetch(`https://plusdsa.onrender.com/api/progress/${userId}/stats?sheetType=${selectedSheet}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         }).catch(() => ({ ok: false }))
       ]);
@@ -4287,7 +4287,7 @@ const GoalSettingSection = ({ isDark, userId, selectedSheet }) => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5001/api/goals/set', {
+      const response = await fetch('https://plusdsa.onrender.com/api/goals/set', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -4779,7 +4779,7 @@ const savePlatformData = async (platform, username, data) => {
   try {
     const token = localStorage.getItem('token');
     if (token) {
-      await fetch('http://localhost:5001/api/platforms/save', {
+      await fetch('https://plusdsa.onrender.com/api/platforms/save', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

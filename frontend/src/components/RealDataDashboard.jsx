@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTheme } from '../contexts/ThemeContext';
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = 'https://plusdsa.onrender.com/api';
 
 const RealDataDashboard = ({ userId, currentSheetType }) => {
   const [userProgress, setUserProgress] = useState({});

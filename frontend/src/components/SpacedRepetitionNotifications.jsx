@@ -11,7 +11,7 @@ const SpacedRepetitionNotifications = ({ userId, sheetType = 'apnaCollege' }) =>
     reminderTime: '09:00'
   });
 
-  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+  const API_BASE = import.meta.env.VITE_API_URL || 'https://plusdsa.onrender.com/api';
 
   useEffect(() => {
     checkForNotifications();

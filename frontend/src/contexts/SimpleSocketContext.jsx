@@ -17,7 +17,7 @@ export const SocketProvider = ({ children }) => {
   const [onlineUsers, setOnlineUsers] = useState(0);
 
   useEffect(() => {
-    const newSocket = io(import.meta.env.VITE_SOCKET_URL, {
+    const newSocket = io(import.meta.env.VITE_SOCKET_URL || 'https://plusdsa.onrender.com', {
       withCredentials: true,
       transports: ['websocket', 'polling']
     });

@@ -13,7 +13,7 @@ const ImprovedWeaknessAnalysis = ({ isDark, userId, selectedSheet, completedProb
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      const response = await fetch(`http://localhost:5001/api/analysis/analysis-history/${selectedSheet}`, {
+      const response = await fetch(`https://plusdsa.onrender.com/api/analysis/analysis-history/${selectedSheet}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
@@ -29,7 +29,7 @@ const ImprovedWeaknessAnalysis = ({ isDark, userId, selectedSheet, completedProb
   const getUserStats = async () => {
     try {
       // Fetch real user analytics data
-      const analyticsResponse = await fetch(`http://localhost:5001/api/analytics/user/${userId}`, {
+      const analyticsResponse = await fetch(`https://plusdsa.onrender.com/api/analytics/user/${userId}`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
       });
       
@@ -96,7 +96,7 @@ const ImprovedWeaknessAnalysis = ({ isDark, userId, selectedSheet, completedProb
       const token = localStorage.getItem('token');
       if (!token) return null;
       
-      const response = await fetch(`http://localhost:5001/api/analysis/performance/${sheetType}`, {
+      const response = await fetch(`https://plusdsa.onrender.com/api/analysis/performance/${sheetType}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -218,7 +218,7 @@ const ImprovedWeaknessAnalysis = ({ isDark, userId, selectedSheet, completedProb
 
   const performAIAnalysis = async (data) => {
     try {
-      const response = await fetch('http://localhost:5001/api/analysis/weakness', {
+      const response = await fetch('https://plusdsa.onrender.com/api/analysis/weakness', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

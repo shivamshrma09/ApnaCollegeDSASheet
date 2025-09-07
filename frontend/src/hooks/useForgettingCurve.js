@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = 'https://plusdsa.onrender.com/api';
 
 export const useForgettingCurve = (userId, sheetType = 'apnaCollege') => {
   const [forgettingCurveData, setForgettingCurveData] = useState({

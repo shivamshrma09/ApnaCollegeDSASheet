@@ -7,7 +7,7 @@ import ChallengeWidget from './ChallengeWidget';
 import { getRandomQuestion } from '../data/challengeQuestions';
 // import './ChatWidget.css'; // CSS file removed
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = 'https://plusdsa.onrender.com/api';
 
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -47,7 +47,7 @@ const ChatWidget = () => {
 
   const initSocket = () => {
     const token = localStorage.getItem('token');
-    const newSocket = io('http://localhost:5001', {
+    const newSocket = io('https://plusdsa.onrender.com', {
       auth: {
         token: token
       }
@@ -216,7 +216,7 @@ const ChatWidget = () => {
         duration: challengeForm.duration
       };
       
-      const response = await axios.post('http://localhost:5001/api/challenges', challengeData, {
+      const response = await axios.post('https://plusdsa.onrender.com/api/challenges', challengeData, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
       });
       

@@ -4,7 +4,7 @@ import { requestCache } from '../utils/requestCache';
 import { requestDebouncer } from '../utils/requestDebouncer';
 import { getAuthHeaders } from '../utils/csrfHelper';
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = 'https://plusdsa.onrender.com/api';
 
 // Singleton to manage all timers
 class TimerManager {

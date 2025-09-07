@@ -17,7 +17,7 @@ export const getCSRFToken = async () => {
 
 const fetchCSRFToken = async () => {
   try {
-    const response = await fetch('http://localhost:5001/api/csrf-token', {
+    const response = await fetch('https://plusdsa.onrender.com/api/csrf-token', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`

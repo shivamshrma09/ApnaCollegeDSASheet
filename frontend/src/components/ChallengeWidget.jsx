@@ -48,7 +48,7 @@ const ChallengeWidget = ({ challenge, onClose }) => {
 
   const joinChallenge = async () => {
     try {
-      await axios.post(`http://localhost:5001/api/challenges/${challenge._id}/join`, {}, {
+      await axios.post(`https://plusdsa.onrender.com/api/challenges/${challenge._id}/join`, {}, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
       });
       setHasJoined(true);
@@ -60,7 +60,7 @@ const ChallengeWidget = ({ challenge, onClose }) => {
 
   const submitAnswer = async () => {
     try {
-      await axios.post(`http://localhost:5001/api/challenges/${challenge._id}/submit`, 
+      await axios.post(`https://plusdsa.onrender.com/api/challenges/${challenge._id}/submit`, 
         { answer },
         { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } }
       );
@@ -73,7 +73,7 @@ const ChallengeWidget = ({ challenge, onClose }) => {
 
   const fetchResults = async () => {
     try {
-      const response = await axios.get(`http://localhost:5001/api/challenges/${challenge._id}/results`, {
+      const response = await axios.get(`https://plusdsa.onrender.com/api/challenges/${challenge._id}/results`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
       });
       setResults(response.data);

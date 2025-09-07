@@ -6,7 +6,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import GoogleSignIn from './GoogleSignIn';
 import './Signup.css';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || `http://localhost:${import.meta.env.VITE_PORT || 5001}/api`;
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://plusdsa.onrender.com/api';
 
 
 function Signup() {
@@ -87,7 +87,7 @@ function Signup() {
       const clientId = 'Ov23liJ2EJqT6I1U83AK'; // Real GitHub Client ID
       const redirectUri = encodeURIComponent(
         window.location.hostname === 'localhost' 
-          ? 'http://localhost:5173/auth/github/callback'
+          ? 'https://plusdsa-app.netlify.app/auth/github/callback'
           : 'https://plusdsa.vercel.app/auth/github/callback'
       );
       const scope = 'user:email';

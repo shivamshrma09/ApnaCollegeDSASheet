@@ -13,7 +13,7 @@ const io = socketIo(server, {
     origin: [
       process.env.FRONTEND_URL || "http://localhost:5173", 
       "http://localhost:3000", 
-      "http://localhost:5000",
+      "https://plusdsa.onrender.com",
       "https://plusdsa.vercel.app",
       "https://plusdsa.netlify.app",
       "https://plusdsa-app.netlify.app",
@@ -42,7 +42,7 @@ app.use(cors({
     const allowedOrigins = [
       process.env.FRONTEND_URL || 'http://localhost:5173', 
       'http://localhost:3000', 
-      'http://localhost:5000', 
+      'https://plusdsa.onrender.com', 
       'http://127.0.0.1:5173',
       'https://plusdsa.vercel.app',
       'https://plusdsa.netlify.app',
@@ -74,7 +74,7 @@ app.use((req, res, next) => {
   const allowedOrigins = [
     process.env.FRONTEND_URL || 'http://localhost:5173', 
     'http://localhost:3000', 
-    'http://localhost:5000', 
+    'https://plusdsa.onrender.com', 
     'http://127.0.0.1:5173',
     'https://plusdsa.vercel.app',
     'https://plusdsa.netlify.app',
