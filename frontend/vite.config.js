@@ -11,27 +11,3 @@ export default defineConfig({
     global: 'globalThis'
   }
 })
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['react-router-dom']
-        },
-        entryFileNames: '[name]-[hash].js',
-        chunkFileNames: '[name]-[hash].js',
-        assetFileNames: '[name]-[hash].[ext]'
-      }
-    },
-    minify: 'terser'
-  },
-  server: {
-    historyApiFallback: true,
-    headers: {
-      'Content-Type': 'application/javascript'
-    }
-  },
-  preview: {
-    historyApiFallback: true
-  }
-}))
