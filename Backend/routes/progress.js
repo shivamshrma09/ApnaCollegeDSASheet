@@ -502,4 +502,53 @@ router.delete('/:userId/playlist/:playlistId/problem/:problemId', async (req, re
   }
 });
 
+// Create playlist (POST /playlist)
+router.post('/playlist', async (req, res) => {
+  try {
+    const { userId, sheetType = 'apnaCollege', ...playlistData } = req.body;
+    
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID required' });
+    }
+    
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    if (!user.sheetProgress) user.sheetProgress = {};
+    
+    const sheetData = user.sheetProgress[sheetType] || {
+      completedProblems: [],
+      starredProblems: [],
+      notes: {},
+      playlists: [],
+      streak: 0,
+      lastSolved: null
+    };
+    
+    if (!sheetData.playlists) sheetData.playlists = [];
+    
+    const newPlaylist = {
+      id: Date.now().toString(),
+      name: playlistData.name || 'New Playlist',
+      description: playlistData.description || '',
+      problems: playlistData.problems || [],
+      createdAt: new Date(),
+      sheetType
+    };
+    
+    sheetData.playlists.push(newPlaylist);
+    
+    user.sheetProgress[sheetType] = sheetData;
+    user.markModified('sheetProgress');
+    await user.save();
+    
+    res.json({ success: true, playlist: newPlaylist, playlists: sheetData.playlists });
+  } catch (error) {
+    console.error('Error creating playlist:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 module.exports = router;

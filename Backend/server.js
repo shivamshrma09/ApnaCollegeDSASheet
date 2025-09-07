@@ -37,7 +37,39 @@ let globalWindowStart = Date.now();
 
 // Middleware
 app.use(cors({
-  origin: [
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      process.env.FRONTEND_URL || 'http://localhost:5173', 
+      'http://localhost:3000', 
+      'http://localhost:5000', 
+      'http://127.0.0.1:5173',
+      'https://plusdsa.vercel.app',
+      'https://plusdsa.netlify.app',
+      'https://hhss-cxve.vercel.app',
+      'https://accounts.google.com',
+      'https://www.googleapis.com'
+    ];
+    
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization', 'userid', 'X-CSRF-Token', 'X-Requested-With'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  optionsSuccessStatus: 200,
+  preflightContinue: false
+}));
+
+// Additional CORS headers for preflight
+app.use((req, res, next) => {
+  const allowedOrigins = [
     process.env.FRONTEND_URL || 'http://localhost:5173', 
     'http://localhost:3000', 
     'http://localhost:5000', 
@@ -47,12 +79,25 @@ app.use(cors({
     'https://hhss-cxve.vercel.app',
     'https://accounts.google.com',
     'https://www.googleapis.com'
-  ],
-  credentials: true,
-  allowedHeaders: ['Content-Type', 'Authorization', 'userid', 'X-CSRF-Token', 'X-Requested-With'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  optionsSuccessStatus: 200
-}));
+  ];
+  
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, userid, X-CSRF-Token, X-Requested-With');
+  
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+  
+  next();
+});
+
 app.use(express.json());
 
 // MongoDB Connection

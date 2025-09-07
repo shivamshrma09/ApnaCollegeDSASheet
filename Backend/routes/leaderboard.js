@@ -85,4 +85,43 @@ router.get('/rank/:userId', async (req, res) => {
   }
 });
 
+// Handle globalThis route (frontend is calling this)
+router.get('/globalThis', async (req, res) => {
+  try {
+    const { sheetType = 'apnaCollege' } = req.query;
+    
+    const users = await User.find({}).select('name email sheetProgress createdAt');
+    
+    const leaderboard = users.map(user => {
+      const progress = user.sheetProgress?.get?.(sheetType) || user.sheetProgress?.[sheetType] || {};
+      const completedCount = progress.completedProblems?.length || 0;
+      
+      return {
+        _id: user._id,
+        userId: user._id,
+        name: user.name,
+        email: user.email,
+        completedProblems: completedCount,
+        totalSolved: completedCount,
+        problemsSolved: completedCount,
+        score: completedCount,
+        streak: progress.streak || 0,
+        joinedAt: user.createdAt || new Date()
+      };
+    }).filter(user => user.completedProblems >= 0)
+      .sort((a, b) => {
+        if (b.completedProblems !== a.completedProblems) {
+          return b.completedProblems - a.completedProblems;
+        }
+        return b.streak - a.streak;
+      })
+      .slice(0, 10);
+
+    res.json({ leaderboard });
+  } catch (error) {
+    console.error('Error fetching globalThis leaderboard:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 module.exports = router;
