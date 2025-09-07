@@ -41,8 +41,14 @@ router.get('/:problemId', async (req, res) => {
   try {
     const { problemId } = req.params;
     
+    // Validate problemId is a valid number
+    const parsedProblemId = parseInt(problemId);
+    if (isNaN(parsedProblemId)) {
+      return res.status(400).json({ message: 'Invalid problem ID' });
+    }
+    
     const messages = await Discussion.find({ 
-      problemId: parseInt(problemId)
+      problemId: parsedProblemId
     })
       .populate('replyTo')
       .sort({ createdAt: 1 })
@@ -63,8 +69,14 @@ router.post('/send', async (req, res) => {
       return res.status(400).json({ message: 'Missing required fields' });
     }
     
+    // Validate problemId is a valid number
+    const parsedProblemId = parseInt(problemId);
+    if (isNaN(parsedProblemId)) {
+      return res.status(400).json({ message: 'Invalid problem ID' });
+    }
+    
     const message = new Discussion({
-      problemId: parseInt(problemId),
+      problemId: parsedProblemId,
       content,
       userId,
       userName,
@@ -196,8 +208,14 @@ For "${problemTitle}":
       }
     }
     
+    // Validate problemId is a valid number
+    const parsedProblemId = parseInt(problemId);
+    if (isNaN(parsedProblemId)) {
+      return res.status(400).json({ message: 'Invalid problem ID' });
+    }
+    
     const aiMessage = new Discussion({
-      problemId: parseInt(problemId),
+      problemId: parsedProblemId,
       content: aiResponse,
       userId: isPrivate ? userId : 'ai', // Use actual user ID for private messages
       userName: 'AI Assistant',

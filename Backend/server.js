@@ -84,6 +84,8 @@ const dailyEmailRoutes = require('./routes/dailyEmail');
 const dailyMorningEmailRoutes = require('./routes/dailyMorningEmail');
 const weeklyReportEmailRoutes = require('./routes/weeklyReportEmail');
 const dailyReminderEmailRoutes = require('./routes/dailyReminderEmail');
+const testEmailRoutes = require('./routes/testEmail');
+const testInterviewEmailRoutes = require('./routes/testInterviewEmail');
 const discussionRoutes = require('./routes/discussion');
 
 
@@ -206,6 +208,16 @@ try {
   app.use('/api/daily-reminder-email', dailyReminderEmailRoutes);
   console.log('✅ Daily reminder email routes registered');
 } catch (e) { console.error('❌ Daily reminder email routes failed:', e.message); }
+
+try {
+  app.use('/api/test-email', testEmailRoutes);
+  console.log('✅ Test email routes registered');
+} catch (e) { console.error('❌ Test email routes failed:', e.message); }
+
+try {
+  app.use('/api/test-interview-email', testInterviewEmailRoutes);
+  console.log('✅ Test interview email routes registered');
+} catch (e) { console.error('❌ Test interview email routes failed:', e.message); }
 
 try {
   app.use('/api/discussion', discussionRoutes);

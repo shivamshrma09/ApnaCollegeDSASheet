@@ -30,7 +30,6 @@ import Header from './Header';
 import './DSASheet.css';
 
 // Import test utilities for debugging
-import '../utils/testSpacedRepetition';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
 
@@ -2879,16 +2878,23 @@ const TestModal = ({ problemId, userId, onClose, onComplete, isDark, problems })
       const response = await fetch('http://localhost:5001/api/test/submit', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ problemId, answers, userId })
+        body: JSON.stringify({ 
+          problemId, 
+          answers, 
+          userId,
+          questions, // ✅ Send REAL questions from Gemini
+          problemTitle: problemInfo.title // ✅ Send problem title
+        })
       });
       
       if (response.ok) {
         const data = await response.json();
-        setResults(data.results);
+        setResults(data);
         setShowResults(true);
+      } else {
+        console.error('Test submission failed:', response.status);
       }
     } catch (error) {
       console.error('Error submitting test:', error);
