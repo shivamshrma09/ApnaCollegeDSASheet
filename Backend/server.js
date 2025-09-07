@@ -94,6 +94,10 @@ const discussionRoutes = require('./routes/discussion');
 
 
 // Basic Routes
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
 app.get('/api/health', (req, res) => {
   res.json({ status: 'Server is running', timestamp: new Date().toISOString() });
 });
