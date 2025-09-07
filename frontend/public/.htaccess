@@ -1,4 +1,4 @@
-# Enable compression
+# Enjjjable compression
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/plain
     AddOutputFilterByType DEFLATE text/html
