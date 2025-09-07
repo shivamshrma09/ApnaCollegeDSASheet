@@ -159,29 +159,7 @@ Be encouraging and educational without giving the complete solution.`;
       }
     } catch (apiError) {
       console.error('Gemini API error:', apiError);
-      
-      // Smart fallback responses
-      const questionLower = question.toLowerCase();
-      const titleLower = problemTitle.toLowerCase();
-      
-      if (questionLower.includes('hi') || questionLower.includes('hello') || questionLower.length < 10) {
-        aiResponse = `Hello! I'm here to help with "${problemTitle}". What specific aspect would you like to discuss?`;
-      } else if (titleLower.includes('reverse') && titleLower.includes('array')) {
-        if (questionLower.includes('complexity') || questionLower.includes('optimize')) {
-          aiResponse = `For reversing an array: Two-pointer approach is O(n) time, O(1) space - most optimal!`;
-        } else {
-          aiResponse = `Great question about array reversal! Key approaches: 1. Two pointers 2. Built-in method 3. Recursion. Which interests you most?`;
-        }
-      } else if (questionLower.includes('complexity')) {
-        aiResponse = `Time complexity analysis is crucial! For "${problemTitle}": Consider operations, nested loops, and single-pass solutions.`;
-      } else {
-        const responses = [
-          `Interesting question about "${problemTitle}"! Let's break it down step by step.`,
-          `Good thinking! Consider the constraints and edge cases for this problem.`,
-          `Great question! Have you tried working through a small example first?`
-        ];
-        aiResponse = responses[Math.floor(Math.random() * responses.length)];
-      }
+      aiResponse = `I'm here to help with "${problemTitle}". What specific aspect would you like to discuss?`;
     }
     
     // Validate problemId is a valid number
@@ -268,8 +246,6 @@ router.get('/recent', async (req, res) => {
 router.use('/uploads', express.static('uploads'));
 
 module.exports = router;
-    
-    // Emit upvote update
     const io = req.app.get('io');
     io.to(`problem_${message.problemId}`).emit('messageUpvoted', {
       messageId,
