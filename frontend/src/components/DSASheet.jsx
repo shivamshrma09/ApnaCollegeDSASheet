@@ -102,8 +102,15 @@ const DSASheet = ({ sheetType = 'apnaCollege', onSheetChange }) => {
   const { toggleTheme, isDark } = useTheme();
   
   const getUserId = () => {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    return user.id || '64f8a1b2c3d4e5f6a7b8c9d0';
+    try {
+      const userStr = localStorage.getItem('user');
+      if (!userStr || userStr === 'undefined') return '64f8a1b2c3d4e5f6a7b8c9d0';
+      const user = JSON.parse(userStr);
+      return user.id || '64f8a1b2c3d4e5f6a7b8c9d0';
+    } catch (error) {
+      console.error('Error parsing user from localStorage:', error);
+      return '64f8a1b2c3d4e5f6a7b8c9d0';
+    }
   };
   
   const userId = getUserId();
@@ -181,7 +188,8 @@ const DSASheet = ({ sheetType = 'apnaCollege', onSheetChange }) => {
         
         // Auto-add to custom spaced repetition
         try {
-          const userId = JSON.parse(localStorage.getItem('user') || '{}').id || '68ba7187488b0b8b3f463c04';
+          const userStr = localStorage.getItem('user');
+          const userId = (userStr && userStr !== 'undefined' ? JSON.parse(userStr).id : null) || '68ba7187488b0b8b3f463c04';
           console.log(`🔄 Adding problem ${problemId} to custom spaced repetition for sheet: ${sheetType}`);
           
           const response = await fetch(`http://localhost:5001/api/custom-spaced-repetition/add-solved?sheetType=${sheetType}`, {
@@ -2681,8 +2689,18 @@ const TestButton = ({ problemId, userId, isDark, problems }) => {
   const [showReport, setShowReport] = useState(false);
   
   useEffect(() => {
-    const completedTests = JSON.parse(localStorage.getItem('completedTests') || '{}');
-    setTestCompleted(completedTests[problemId] || false);
+    try {
+      const completedTestsStr = localStorage.getItem('completedTests');
+      if (!completedTestsStr || completedTestsStr === 'undefined') {
+        setTestCompleted(false);
+        return;
+      }
+      const completedTests = JSON.parse(completedTestsStr);
+      setTestCompleted(completedTests[problemId] || false);
+    } catch (error) {
+      console.error('Error parsing completedTests:', error);
+      setTestCompleted(false);
+    }
   }, [problemId]);
   
   const handleTestClick = () => {
@@ -2696,17 +2714,23 @@ const TestButton = ({ problemId, userId, isDark, problems }) => {
   
   const handleTestComplete = (testResults) => {
     setTestCompleted(true);
-    const completedTests = JSON.parse(localStorage.getItem('completedTests') || '{}');
-    completedTests[problemId] = true;
-    localStorage.setItem('completedTests', JSON.stringify(completedTests));
-    
-    // Save test results to localStorage
-    const allTestResults = JSON.parse(localStorage.getItem('testResults') || '{}');
-    allTestResults[problemId] = {
-      ...testResults,
-      completedAt: new Date().toISOString()
-    };
-    localStorage.setItem('testResults', JSON.stringify(allTestResults));
+    try {
+      const completedTestsStr = localStorage.getItem('completedTests');
+      const completedTests = completedTestsStr && completedTestsStr !== 'undefined' ? JSON.parse(completedTestsStr) : {};
+      completedTests[problemId] = true;
+      localStorage.setItem('completedTests', JSON.stringify(completedTests));
+      
+      // Save test results to localStorage
+      const testResultsStr = localStorage.getItem('testResults');
+      const allTestResults = testResultsStr && testResultsStr !== 'undefined' ? JSON.parse(testResultsStr) : {};
+      allTestResults[problemId] = {
+        ...testResults,
+        completedAt: new Date().toISOString()
+      };
+      localStorage.setItem('testResults', JSON.stringify(allTestResults));
+    } catch (error) {
+      console.error('Error saving test results:', error);
+    }
     
     setShowTestModal(false);
   };
@@ -2864,9 +2888,14 @@ const TestModal = ({ problemId, userId, onClose, onComplete, isDark, problems })
   
   const handleRetakeTest = () => {
     setTestCompleted(false);
-    const completedTests = JSON.parse(localStorage.getItem('completedTests') || '{}');
-    delete completedTests[problemId];
-    localStorage.setItem('completedTests', JSON.stringify(completedTests));
+    try {
+      const completedTestsStr = localStorage.getItem('completedTests');
+      const completedTests = completedTestsStr && completedTestsStr !== 'undefined' ? JSON.parse(completedTestsStr) : {};
+      delete completedTests[problemId];
+      localStorage.setItem('completedTests', JSON.stringify(completedTests));
+    } catch (error) {
+      console.error('Error updating completedTests:', error);
+    }
     setShowReport(false);
     setShowStartScreen(true);
     setShowTestModal(true);
