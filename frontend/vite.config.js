@@ -17,21 +17,19 @@ export default defineConfig(({ mode }) => ({
         manualChunks: {
           vendor: ['react', 'react-dom'],
           router: ['react-router-dom']
-        }
+        },
+        entryFileNames: '[name]-[hash].js',
+        chunkFileNames: '[name]-[hash].js',
+        assetFileNames: '[name]-[hash].[ext]'
       }
     },
-    // Optimize for better SEO
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true
-      }
-    }
+    minify: 'terser'
   },
-  // SEO-friendly server configuration
   server: {
-    historyApiFallback: true
+    historyApiFallback: true,
+    headers: {
+      'Content-Type': 'application/javascript'
+    }
   },
   preview: {
     historyApiFallback: true
