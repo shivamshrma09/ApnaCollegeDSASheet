@@ -1,19 +1,19 @@
 {
-  "name": "+DSA | PlusDSA - Code Your Way to Success",
+  "name": "PlusDSA",
   "short_name": "PlusDSA",
-  "description": "Code Your Way to Success with India's smartest DSA platform! 373+ problems, smart progress tracking.",
+  "description": "Free DSA Practice Platform",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3b82f6",
-  "orientation": "portrait-primary",
-  "categories": ["education", "productivity", "developer"],
-  "lang": "en-IN",
-  "icons": [],
-  "screenshots": [
+  "icons": [
     {
-      "src": "/screenshot-wide.png",
-      "sizes": "1280x720",
+      "src": "/dark.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
       "type": "image/png",
       "form_factor": "wide"
     },
