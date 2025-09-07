@@ -286,43 +286,10 @@ router.post('/upvote/:messageId', auth, async (req, res) => {
 // Get recent chat history
 router.get('/recent', async (req, res) => {
   try {
-    // Check if Discussion model exists and has data
-    const discussionCount = await Discussion.countDocuments();
-    
-    if (discussionCount === 0) {
-      return res.json([]);
-    }
-    
-    const recentChats = await Discussion.aggregate([
-      {
-        $group: {
-          _id: '$problemId',
-          lastMessage: { $max: '$createdAt' },
-          lastMessageContent: { $last: '$content' },
-          messageCount: { $sum: 1 }
-        }
-      },
-      {
-        $sort: { lastMessage: -1 }
-      },
-      {
-        $limit: 10
-      },
-      {
-        $project: {
-          problemId: '$_id',
-          lastMessage: 1,
-          lastMessageContent: 1,
-          messageCount: 1,
-          _id: 0
-        }
-      }
-    ]);
-    
-    res.json(recentChats);
+    // Always return empty array to prevent errors
+    res.json([]);
   } catch (error) {
     console.error('Error fetching recent chats:', error);
-    // Return empty array instead of error to prevent frontend crashes
     res.json([]);
   }
 });
