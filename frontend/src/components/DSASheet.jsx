@@ -2003,7 +2003,7 @@ const DSASheet = ({ sheetType = 'apnaCollege', onSheetChange }) => {
                     {isOpen && (
                       <div className="problem-list">
 
-                        <div className="problem-table-header" style={{display: 'grid', gridTemplateColumns: '60px 1fr 80px 80px 60px 80px 60px 80px 80px 80px 80px 80px', gap: '12px', padding: '12px 24px', backgroundColor: isDark ? '#374151' : '#f8f9fa', borderBottom: `1px solid ${isDark ? '#4b5563' : '#e9ecef'}`, fontSize: '14px', fontWeight: '600', color: isDark ? '#d1d5db' : '#495057'}}>
+                        <div className="problem-table-header" style={{display: 'grid', gridTemplateColumns: '60px 1fr 80px 80px 60px 80px 60px 80px 80px 80px 80px', gap: '12px', padding: '12px 24px', backgroundColor: isDark ? '#374151' : '#f8f9fa', borderBottom: `1px solid ${isDark ? '#4b5563' : '#e9ecef'}`, fontSize: '14px', fontWeight: '600', color: isDark ? '#d1d5db' : '#495057'}}>
                           <div>Status</div>
                           <div>Problem</div>
                           <div>Practice</div>
@@ -2014,7 +2014,6 @@ const DSASheet = ({ sheetType = 'apnaCollege', onSheetChange }) => {
                           <div>Timer</div>
                           <div>Articles</div>
                           <div>Chat</div>
-                          <div>Test</div>
                           <div>Difficulty</div>
                         </div>
                         
