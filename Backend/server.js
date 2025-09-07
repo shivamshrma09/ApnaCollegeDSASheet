@@ -16,6 +16,7 @@ const io = socketIo(server, {
       "http://localhost:5000",
       "https://plusdsa.vercel.app",
       "https://plusdsa.netlify.app",
+      "https://plusdsa-app.netlify.app",
       "https://hhss-cxve.vercel.app",
       "https://accounts.google.com"
     ],
@@ -45,6 +46,7 @@ app.use(cors({
       'http://127.0.0.1:5173',
       'https://plusdsa.vercel.app',
       'https://plusdsa.netlify.app',
+      'https://plusdsa-app.netlify.app',
       'https://hhss-cxve.vercel.app',
       'https://accounts.google.com',
       'https://www.googleapis.com'
@@ -76,6 +78,7 @@ app.use((req, res, next) => {
     'http://127.0.0.1:5173',
     'https://plusdsa.vercel.app',
     'https://plusdsa.netlify.app',
+    'https://plusdsa-app.netlify.app',
     'https://hhss-cxve.vercel.app',
     'https://accounts.google.com',
     'https://www.googleapis.com'
