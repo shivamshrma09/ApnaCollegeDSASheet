@@ -1,5 +1,9 @@
 {
   "name": "dsa-sheet-frontend",
+  "scripts": {
+    "build": "vite build",
+    "vercel-build": "vite build"
+  },
   "private": true,
   "version": "0.0.0",
   "type": "module",
