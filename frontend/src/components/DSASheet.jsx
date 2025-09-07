@@ -2808,7 +2808,7 @@ const TestModal = ({ problemId, userId, onClose, onComplete, isDark, problems })
       
       console.log('Sending test request:', requestData);
       
-      const response = await fetch('http://localhost:5001/api/test/generate', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/test/generate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
