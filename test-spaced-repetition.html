@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spaced Repetition Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        .result { margin: 10px 0; padding: 10px; background: #f8f9fa; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>🧠 Spaced Repetition System Test</h1>
+    
+    <div class="test-section">
+        <h2>Test Configuration</h2>
+        <p><strong>API Base URL:</strong> <span id="apiUrl">http://localhost:5000/api</span></p>
+        <p><strong>User ID:</strong> <span id="userId">68ba7187488b0b8b3f463c04</span></p>
+        <p><strong>Sheet Type:</strong> <span id="sheetType">apnaCollege</span></p>
+    </div>
+
+    <div class="test-section">
+        <h2>1. Check Due Problems</h2>
+        <button onclick="checkDueProblems()">Get Due Problems</button>
+        <div id="dueResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Add Problem to Spaced Repetition</h2>
+        <input type="number" id="problemId" placeholder="Problem ID (e.g., 1)" value="1">
+        <button onclick="addProblem()">Add Problem</button>
+        <div id="addResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Review Problem</h2>
+        <input type="number" id="reviewProblemId" placeholder="Problem ID" value="1">
+        <select id="quality">
+            <option value="0">0 - Complete blackout</option>
+            <option value="1">1 - Incorrect</option>
+            <option value="2">2 - Difficult</option>
+            <option value="3" selected>3 - Hesitant</option>
+            <option value="4">4 - Easy</option>
+            <option value="5">5 - Perfect</option>
+        </select>
+        <button onclick="reviewProblem()">Review Problem</button>
+        <div id="reviewResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Get All Spaced Repetition Data</h2>
+        <button onclick="getAllData()">Get All Data</button>
+        <div id="allDataResult" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. Frontend Integration Test</h2>
+        <button onclick="testFrontendIntegration()">Test Frontend Hook</button>
+        <div id="frontendResult" class="result"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+        const USER_ID = '68ba7187488b0b8b3f463c04';
+        const SHEET_TYPE = 'apnaCollege';
+
+        async function makeRequest(url, options = {}) {
+            try {
+                const response = await fetch(url, {
+                    ...options,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'userid': USER_ID,
+                        ...options.headers
+                    }
+                });
+                
+                const data = await response.json();
+                return { success: response.ok, data, status: response.status };
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        }
+
+        async function checkDueProblems() {
+            const result = await makeRequest(`${API_URL}/spaced-repetition/due?sheetType=${SHEET_TYPE}`);
+            const resultDiv = document.getElementById('dueResult');
+            
+            if (result.success) {
+                resultDiv.innerHTML = `
+                    <strong>✅ Success:</strong> Found ${result.data.length} due problems<br>
+                    <pre>${JSON.stringify(result.data, null, 2)}</pre>
+                `;
+                resultDiv.className = 'result success';
+            } else {
+                resultDiv.innerHTML = `<strong>❌ Error:</strong> ${result.error || JSON.stringify(result.data)}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function addProblem() {
+            const problemId = document.getElementById('problemId').value;
+            const result = await makeRequest(`${API_URL}/spaced-repetition/add?sheetType=${SHEET_TYPE}`, {
+                method: 'POST',
+                body: JSON.stringify({ problemId })
+            });
+            
+            const resultDiv = document.getElementById('addResult');
+            
+            if (result.success) {
+                resultDiv.innerHTML = `<strong>✅ Success:</strong> ${result.data.message}`;
+                resultDiv.className = 'result success';
+            } else {
+                resultDiv.innerHTML = `<strong>❌ Error:</strong> ${result.error || JSON.stringify(result.data)}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function reviewProblem() {
+            const problemId = document.getElementById('reviewProblemId').value;
+            const quality = parseInt(document.getElementById('quality').value);
+            
+            const result = await makeRequest(`${API_URL}/spaced-repetition/review?sheetType=${SHEET_TYPE}`, {
+                method: 'POST',
+                body: JSON.stringify({ problemId, quality })
+            });
+            
+            const resultDiv = document.getElementById('reviewResult');
+            
+            if (result.success) {
+                resultDiv.innerHTML = `
+                    <strong>✅ Success:</strong> ${result.data.message}<br>
+                    <strong>Next Review:</strong> ${result.data.nextReviewDate}<br>
+                    <strong>Interval:</strong> ${result.data.nextInterval}
+                `;
+                resultDiv.className = 'result success';
+            } else {
+                resultDiv.innerHTML = `<strong>❌ Error:</strong> ${result.error || JSON.stringify(result.data)}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function getAllData() {
+            const result = await makeRequest(`${API_URL}/spaced-repetition/all?sheetType=${SHEET_TYPE}`);
+            const resultDiv = document.getElementById('allDataResult');
+            
+            if (result.success) {
+                resultDiv.innerHTML = `
+                    <strong>✅ Success:</strong> Found ${result.data.length} problems in spaced repetition<br>
+                    <pre>${JSON.stringify(result.data, null, 2)}</pre>
+                `;
+                resultDiv.className = 'result success';
+            } else {
+                resultDiv.innerHTML = `<strong>❌ Error:</strong> ${result.error || JSON.stringify(result.data)}`;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function testFrontendIntegration() {
+            const resultDiv = document.getElementById('frontendResult');
+            
+            // Test if SpacedRepetition component would work
+            const tests = [
+                { name: 'Check Due Problems', url: `${API_URL}/spaced-repetition/due?sheetType=${SHEET_TYPE}` },
+                { name: 'Check All Data', url: `${API_URL}/spaced-repetition/all?sheetType=${SHEET_TYPE}` }
+            ];
+            
+            let results = [];
+            
+            for (const test of tests) {
+                const result = await makeRequest(test.url);
+                results.push({
+                    name: test.name,
+                    success: result.success,
+                    data: result.data,
+                    error: result.error
+                });
+            }
+            
+            const allSuccess = results.every(r => r.success);
+            
+            resultDiv.innerHTML = `
+                <strong>${allSuccess ? '✅' : '❌'} Frontend Integration:</strong><br>
+                ${results.map(r => `
+                    <div style="margin: 5px 0;">
+                        ${r.success ? '✅' : '❌'} ${r.name}: 
+                        ${r.success ? `${Array.isArray(r.data) ? r.data.length : 'OK'} items` : r.error}
+                    </div>
+                `).join('')}
+                <br>
+                <strong>SpacedRepetition Component Status:</strong> 
+                ${allSuccess ? 'Should work correctly' : 'May have issues'}
+            `;
+            
+            resultDiv.className = allSuccess ? 'result success' : 'result error';
+        }
+
+        // Auto-run initial test
+        window.onload = function() {
+            checkDueProblems();
+        };
+    </script>
+</body>
+</html>

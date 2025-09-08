@@ -124,6 +124,7 @@ const { setupWeeklyAnalysisCron } = require('./cron/weeklyAnalysisCron');
 const { setupDailyMorningEmailCron } = require('./cron/dailyMorningEmailCron');
 const { setupWeeklyReportCron } = require('./cron/weeklyReportCron');
 const { setupDailyReminderCron } = require('./cron/dailyReminderCron');
+const { initializeScheduledJobs } = require('./services/notificationService');
 const feedbackMessageRoutes = require('./routes/feedbackMessage');
 const leaderboardRoutes = require('./routes/leaderboard');
 
@@ -376,7 +377,8 @@ server.listen(PORT, '0.0.0.0', () => {
     setupDailyMorningEmailCron();
     setupWeeklyReportCron();
     setupDailyReminderCron();
-    console.log('✅ Cron jobs initialized');
+    initializeScheduledJobs();
+    console.log('✅ All cron jobs and notification services initialized');
   }
   
   console.log('='.repeat(50));
