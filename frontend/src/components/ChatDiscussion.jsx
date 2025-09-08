@@ -2119,6 +2119,7 @@ const ChatDiscussion = ({ isDark, isOpen, onClose, problemId = 'general' }) => {
               onClick={() => {
                 setShowNotification(false);
                 setNotifications([]);
+                setReplyingTo(null);
               }}
               style={{
                 background: 'rgba(255,255,255,0.1)',
@@ -2128,11 +2129,6 @@ const ChatDiscussion = ({ isDark, isOpen, onClose, problemId = 'general' }) => {
                 borderRadius: '6px',
                 cursor: 'pointer',
                 fontSize: '12px'
-              }}
-              onClick={() => {
-                setShowNotification(false);
-                setNotifications([]);
-                setReplyingTo(null);
               }}
             >
               Dismiss
@@ -2153,10 +2149,6 @@ const ChatDiscussion = ({ isDark, isOpen, onClose, problemId = 'general' }) => {
           }
         }
       `}</style>
-      
-
-      
-
     </div>
   );
 };

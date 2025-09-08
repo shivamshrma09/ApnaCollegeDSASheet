@@ -47,7 +47,7 @@ const ChatWidget = () => {
 
   const initSocket = () => {
     const token = localStorage.getItem('token');
-    const newSocket = io('https://plusdsa.onrender.com', {
+    const newSocket = io(import.meta.env.VITE_SOCKET_URL || 'https://plusdsa.onrender.com', {
       auth: {
         token: token
       }
@@ -216,7 +216,7 @@ const ChatWidget = () => {
         duration: challengeForm.duration
       };
       
-      const response = await axios.post('https://plusdsa.onrender.com/api/challenges', challengeData, {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL || 'https://plusdsa.onrender.com/api'}/challenges`, challengeData, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
       });
       

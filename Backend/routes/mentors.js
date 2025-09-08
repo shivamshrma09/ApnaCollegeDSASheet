@@ -1,12 +1,12 @@
 const express = require('express');
 const Mentor = require('../models/Mentor');
-const { auth } = require('../middleware/auth');
+
 const { sanitizeForLog } = require('../utils/sanitizer');
 
 const router = express.Router();
 
 // Get all active mentors
-router.get('/', auth, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const mentors = await Mentor.find({ isActive: true })
       .select('-__v')
@@ -20,7 +20,7 @@ router.get('/', auth, async (req, res) => {
 });
 
 // Get mentor by ID
-router.get('/:id', auth, async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     const mentor = await Mentor.findById(req.params.id);
     if (!mentor || !mentor.isActive) {

@@ -83,11 +83,7 @@ export default function Login() {
     try {
       // GitHub OAuth URL
       const clientId = 'Ov23liJ2EJqT6I1U83AK'; // Real GitHub Client ID
-      const redirectUri = encodeURIComponent(
-        window.location.hostname === 'localhost' 
-          ? 'https://plusdsa-app.netlify.app/auth/github/callback'
-          : 'https://plusdsa.vercel.app/auth/github/callback'
-      );
+      const redirectUri = encodeURIComponent('https://plusdsa-app.netlify.app/auth/github/callback');
       const scope = 'user:email';
       
       const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&state=${Date.now()}`;
