@@ -2,7 +2,13 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://plusdsa.vercel.app/sitemap.xml
+Sitemap: https://plusdsa-app.netlify.app/sitemap.xml
+
+# Priority pages for crawling
+Allow: /dsa-sheet
+Allow: /interview
+Allow: /practice
+Allow: /problems
 
 # Additional files
 Allow: /humans.txt

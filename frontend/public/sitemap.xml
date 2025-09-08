@@ -1,147 +1,159 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://plusdsa.vercel.app/</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/dsa-sheet</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/dsa-sheet</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/sheet/apnaCollege</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/sheet/apnaCollege</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/sheet/striverSDE</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/sheet/striverSDE</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/sheet/blind75</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/sheet/blind75</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/sheet/neetcode150</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/sheet/neetcode150</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/sheet/loveBabbar</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/sheet/loveBabbar</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/competitive</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/competitive</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/mentorship</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/mentorship</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/interview</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/interview</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/roadmap</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/roadmap</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/code-editor</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/code-editor</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/topic/arrays</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/topic/arrays</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/topic/strings</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/topic/strings</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/topic/trees</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/topic/trees</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/topic/linkedlists</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/topic/linkedlists</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/topic/dp</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/topic/dp</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/topic/stacks-queues</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/topic/stacks-queues</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/topic/graphs</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/topic/graphs</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/topic/binary-search</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/topic/binary-search</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/topic/sorting</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/topic/sorting</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/topic/greedy</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/topic/greedy</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/topic/backtracking</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/topic/backtracking</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://plusdsa.vercel.app/topic/bit-manipulation</loc>
-    <lastmod>2025-09-07</lastmod>
+    <loc>https://plusdsa-app.netlify.app/topic/bit-manipulation</loc>
+    <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://plusdsa-app.netlify.app/about</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://plusdsa-app.netlify.app/contact</loc>
+    <lastmod>2024-12-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>
